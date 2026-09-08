@@ -406,6 +406,7 @@
     </ul>
     <h3>2.4 FAAB Reset</h3>
     <p>FAAB budgets reset to <span class="highlight-value">$100</span> per franchise annually, following the conclusion of the real-world NFL Draft. Any bonus FAAB earned through the Franchise Tag System (Article 7) or the Rivalry Cup (Article 12) is added on top of the standard reset amount at that same time.</p>
+    <p class="note">Transparency note: the highest a franchise's budget can start a season at, stacking every possible bonus at once, is <span class="highlight-value">$165</span> — $100 base, plus a refunded Legend-tier deposit (+$30, Article 7.5), plus the Legend tier benefit (+$25, Article 7.3), plus a Rivalry Cup bonus (+$10, Article 12.5). Reaching this ceiling requires five consecutive seasons tagging the same player and a rivalry sweep in that same season — an intentionally rare combination, and one that resets fully the following year.</p>
   </section>
 
   <!-- Article 3 -->
@@ -472,7 +473,7 @@
         <thead><tr><th>Category</th><th>Points</th></tr></thead>
         <tbody>
           <tr><td>Passing Yards</td><td>0.04 / yard (1 pt per 25 yds)</td></tr>
-          <tr><td>Passing Touchdown</td><td>4 pts</td></tr>
+          <tr><td>Passing Touchdown</td><td>6 pts</td></tr>
           <tr><td>Interception Thrown</td><td>-2 pts</td></tr>
           <tr><td>Rushing Yards</td><td>0.1 / yard (1 pt per 10 yds)</td></tr>
           <tr><td>Rushing Touchdown</td><td>6 pts</td></tr>
@@ -524,8 +525,23 @@
       <li><strong>Legend Milestone (Year 5):</strong> reaching Franchise Legend in Year 5 awards the franchise a 3rd round rookie comp pick in the following rookie draft.</li>
       <li><strong>Milestone Requirement:</strong> to receive a comp pick, the tagged player must (a) remain on the franchise's roster the entire season, and (b) start a minimum of 7 games, if healthy enough to do so.</li>
     </ul>
-    <h3>7.5 Dropping a Tagged Player — Penalty</h3>
-    <p>If an owner drops their tagged Franchise Player during the season (breaking the full-season roster requirement), the owner pays a FAAB penalty based on the player's tier at the time of the drop:</p>
+    <h3>7.5 Tag Cost &amp; Season Deposit</h3>
+    <p>Continuing a Franchise Tag streak into a new tier requires the tagging owner to pay a FAAB deposit at the tagging deadline (Article 7.2). Deposits are only charged when crossing into a new tier — holding within the same tier (e.g., Year 4 of Gold) costs nothing further:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Transition</th><th>Deposit</th></tr></thead>
+        <tbody>
+          <tr><td>Year 1 (Bronze)</td><td>Free</td></tr>
+          <tr><td>Year 2 &rarr; Silver</td><td>$10 FAAB</td></tr>
+          <tr><td>Year 3 &rarr; Gold</td><td>$20 FAAB</td></tr>
+          <tr><td>Year 4 (staying Gold)</td><td>Free</td></tr>
+          <tr><td>Year 5 &rarr; Legend</td><td>$30 FAAB</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The deposit is refunded in full at the end of the season if the tagged player remains on the franchise's roster for the entire season, satisfying Article 7.2's full-season requirement. If the player is dropped or traded away before season's end, the deposit is forfeited — in addition to the penalties in Article 7.6 or 7.7. The deposit and any tier benefit (Article 7.3) are independent of one another; both apply in full when earned.</p>
+    <h3>7.6 Dropping a Tagged Player — Penalty</h3>
+    <p>If an owner drops their tagged Franchise Player mid-season, breaking the full-season roster requirement, the owner (a) forfeits that season's tag deposit under Article 7.5, if one was paid, and (b) pays an additional FAAB penalty based on the player's tier at time of drop. These two costs stack.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Tier Dropped</th><th>Penalty</th></tr></thead>
@@ -537,8 +553,22 @@
         </tbody>
       </table>
     </div>
-    <h3>7.6 Trading a Tagged Player — Acquisition Cost</h3>
-    <p>If a tagged Franchise Player is traded, the acquiring team owes the trading-away team additional compensation on top of whatever else is exchanged in the trade:</p>
+    <h3>7.7 Trading Away Your Own Tagged Player — Penalty</h3>
+    <p>If an owner trades away their own tagged Franchise Player mid-season, breaking the full-season roster requirement, the trading-away owner (a) forfeits that season's tag deposit under Article 7.5, if one was paid, and (b) pays the same FAAB penalty scale as Article 7.6, based on the player's tier at time of trade:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier Traded Away</th><th>Penalty</th></tr></thead>
+        <tbody>
+          <tr><td>Bronze</td><td>$10 FAAB</td></tr>
+          <tr><td>Silver</td><td>$15 FAAB</td></tr>
+          <tr><td class="gold-value">Gold</td><td>$25 FAAB</td></tr>
+          <tr><td class="gold-value">Legend</td><td>$35 FAAB</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">This penalty is in addition to — not in place of — the trading-away owner's right to receive the acquiring team's compensation under Article 7.8.</p>
+    <h3>7.8 Trading a Tagged Player — Acquisition Cost</h3>
+    <p>The acquiring team owes the trading-away team additional compensation, on top of the trade itself, based on tier:</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Tier</th><th>Buyer Pays Seller</th></tr></thead>
@@ -550,10 +580,10 @@
         </tbody>
       </table>
     </div>
-    <h3>7.7 Tag Reset on Acquisition</h3>
-    <p>A tagged player acquired via trade does not bring their tier or streak with them — their consecutive-tag streak resets to 0 upon joining the new franchise. The acquiring team may not tag that player until the next tagging deadline (Article 7.2). The new franchise may then begin a fresh tag streak with that player if they choose.</p>
-    <h3>7.8 Record-Keeping</h3>
-    <p>The current Franchise Tag status of each player is documented via Commissioner Notes on that player within Sleeper. The League Notes maintain a historical record of every player who has reached Franchise Legend status.</p>
+    <h3>7.9 Tag Reset on Acquisition</h3>
+    <p>A tagged player acquired via trade does not bring their tier or streak with them — their consecutive-tag streak resets to 0 upon joining the new franchise. The acquiring team may not tag that player until the next tagging deadline, at which point a fresh streak may begin.</p>
+    <h3>7.10 Record-Keeping</h3>
+    <p>Current tag status is documented via Commissioner Notes on the player in Sleeper. League Notes maintain a historical record of every player who has reached Legend status.</p>
   </section>
 
   <!-- Article 8 -->
