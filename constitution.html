@@ -1,0 +1,679 @@
+<title>Constitution</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground: #080c18;
+    --ground-raised: rgba(10, 16, 36, 0.88);
+    --surface: #0d1225;
+    --surface-border: rgba(0, 180, 255, 0.08);
+    --glow: #00b4ff;
+    --glow-soft: rgba(0, 180, 255, 0.35);
+    --glow-dim: rgba(0, 180, 255, 0.12);
+    --glow-faint: rgba(0, 180, 255, 0.05);
+    --text-primary: #d8dfe8;
+    --text-body: #a8b4c4;
+    --text-muted: #4a5a6e;
+    --gold: #e8a910;
+    --table-row-alt: rgba(0, 180, 255, 0.03);
+    --table-header: rgba(0, 180, 255, 0.06);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text-body);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    padding: 1.2rem 2rem;
+    background: var(--ground-raised);
+    border-bottom: 1px solid var(--glow-dim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow-soft);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  nav a:hover::after,
+  nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  nav a:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  nav a.active {
+    color: var(--glow);
+  }
+
+  nav a.active::after {
+    transform: scaleX(1);
+  }
+
+  .page-header {
+    padding: 7rem 2rem 3rem;
+    text-align: center;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  .page-header h1 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow: 0 0 30px rgba(0, 180, 255, 0.25);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .page-header .page-sub {
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+  }
+
+  .toc {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 1rem;
+  }
+
+  .toc-label {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 1rem;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 0.35rem 2rem;
+  }
+
+  .toc-list li a {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .toc-list li a:hover {
+    color: var(--glow);
+  }
+
+  .toc-list .toc-num {
+    color: var(--glow);
+    font-weight: 600;
+    min-width: 1.5rem;
+    opacity: 0.6;
+  }
+
+  main {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1rem 2rem 6rem;
+  }
+
+  .article-block {
+    padding: 2.5rem 0 2rem;
+    border-top: 1px solid var(--surface-border);
+  }
+
+  .article-block:first-child {
+    border-top: none;
+  }
+
+  .article-title {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .article-num {
+    font-size: 1rem;
+    color: var(--glow);
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+  }
+
+  h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 1.8rem 0 0.6rem;
+  }
+
+  h3:first-child {
+    margin-top: 0;
+  }
+
+  p {
+    margin: 0.6rem 0;
+  }
+
+  .note {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid var(--surface-border);
+    border-radius: 4px;
+  }
+
+  .table-wrap table {
+    margin: 0;
+  }
+
+  th {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--table-header);
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--glow-faint);
+    color: var(--text-body);
+  }
+
+  tr:nth-child(even) td {
+    background: var(--table-row-alt);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td:first-child {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .highlight-value {
+    color: var(--glow);
+    font-weight: 700;
+  }
+
+  .gold-value {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  ul, ol {
+    padding-left: 1.4rem;
+    margin: 0.6rem 0;
+  }
+
+  li {
+    margin: 0.35rem 0;
+  }
+
+  li::marker {
+    color: var(--text-muted);
+  }
+
+  .penalty-escalation {
+    counter-reset: offense;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .penalty-escalation li {
+    counter-increment: offense;
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--glow-faint);
+  }
+
+  .penalty-escalation li:last-child {
+    border-bottom: none;
+  }
+
+  .penalty-escalation .offense-num {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--glow);
+    min-width: 2.5rem;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 480px) {
+    nav { gap: 1rem; padding: 1rem 1rem; }
+    nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+    main { padding: 1rem 1.25rem 4rem; }
+    .page-header { padding: 6.5rem 1.25rem 2rem; }
+  }
+</style>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="constitution.html" class="active">Constitution</a>
+  <a href="legends.html">Franchise Legends</a>
+  <a href="tags.html">Franchise Tags</a>
+</nav>
+
+<header class="page-header">
+  <h1>League Constitution</h1>
+  <p class="page-sub">A 14-Team Superflex Dynasty League &middot; Hosted on Sleeper &middot; Founded 2026</p>
+</header>
+
+<div class="toc">
+  <p class="toc-label">Table of Contents</p>
+  <ol class="toc-list">
+    <li><a href="#art1"><span class="toc-num">1</span> League Overview</a></li>
+    <li><a href="#art2"><span class="toc-num">2</span> Season Calendar</a></li>
+    <li><a href="#art3"><span class="toc-num">3</span> League Dues &amp; Buy-In</a></li>
+    <li><a href="#art4"><span class="toc-num">4</span> Startup Draft</a></li>
+    <li><a href="#art5"><span class="toc-num">5</span> Roster Construction</a></li>
+    <li><a href="#art6"><span class="toc-num">6</span> Scoring Settings</a></li>
+    <li><a href="#art7"><span class="toc-num">7</span> Franchise Tag System</a></li>
+    <li><a href="#art8"><span class="toc-num">8</span> Taxi Squad</a></li>
+    <li><a href="#art9"><span class="toc-num">9</span> Waivers</a></li>
+    <li><a href="#art10"><span class="toc-num">10</span> Trades</a></li>
+    <li><a href="#art11"><span class="toc-num">11</span> Lineup Compliance</a></li>
+    <li><a href="#art12"><span class="toc-num">12</span> Rivalry Weeks</a></li>
+    <li><a href="#art13"><span class="toc-num">13</span> Playoffs &amp; Seeding</a></li>
+    <li><a href="#art14"><span class="toc-num">14</span> Rookie Draft Format</a></li>
+    <li><a href="#art15"><span class="toc-num">15</span> Payouts</a></li>
+    <li><a href="#art16"><span class="toc-num">16</span> Owner Departure</a></li>
+    <li><a href="#art17"><span class="toc-num">17</span> Amendments</a></li>
+  </ol>
+</div>
+
+<main>
+
+  <!-- Article 1 -->
+  <section class="article-block" id="art1">
+    <h2 class="article-title"><span class="article-num">Art. 1</span> League Overview</h2>
+    <h3>1.1 League Name</h3>
+    <p>The league shall be known as "Franchise Mode."</p>
+    <h3>1.2 League Format</h3>
+    <p>Franchise Mode is a 14-team Superflex Dynasty League.</p>
+    <h3>1.3 Platform</h3>
+    <p>The league is hosted and operated on Sleeper.</p>
+    <h3>1.4 Standings Format</h3>
+    <p>Franchise Mode uses a hybrid head-to-head plus league-median scoring format. Each week, in addition to a franchise's standard head-to-head matchup, that franchise's score is also compared against the league median score for that week. As a result, a franchise may earn two wins in a single week (a head-to-head win plus a median win), one win, or zero wins, depending on results.</p>
+  </section>
+
+  <!-- Article 2 -->
+  <section class="article-block" id="art2">
+    <h2 class="article-title"><span class="article-num">Art. 2</span> Season Calendar</h2>
+    <h3>2.1 Regular Season</h3>
+    <p>The regular season runs from Week 1 through Week 14.</p>
+    <h3>2.2 Playoffs</h3>
+    <p>The championship playoffs run from Week 15 through Week 17.</p>
+    <h3>2.3 Trading Window</h3>
+    <p>Trading is open year-round, with the following exceptions:</p>
+    <ul>
+      <li>Trading is closed entirely during the startup draft.</li>
+      <li>Trading is closed during Weeks 14 through 17.</li>
+    </ul>
+    <h3>2.4 FAAB Reset</h3>
+    <p>FAAB budgets reset to <span class="highlight-value">$100</span> per franchise annually, following the conclusion of the real-world NFL Draft. Any bonus FAAB earned through the Franchise Tag System (Article 7) or the Rivalry Cup (Article 12) is added on top of the standard reset amount at that same time.</p>
+  </section>
+
+  <!-- Article 3 -->
+  <section class="article-block" id="art3">
+    <h2 class="article-title"><span class="article-num">Art. 3</span> League Dues &amp; Buy-In</h2>
+    <h3>3.1 Standard Buy-In</h3>
+    <p>The league buy-in is <span class="highlight-value">$30</span> per franchise, per season.</p>
+    <h3>3.2 Upfront Commitment</h3>
+    <p>At league launch, each franchise pays 2 seasons of dues upfront, for a total of <span class="highlight-value">$60</span>.</p>
+    <h3>3.3 Ongoing Payment Structure</h3>
+    <p>Following the initial launch, the league operates on a "pay for the season ahead" model — dues for the upcoming season are collected during or by the end of the current season, ensuring the league remains funded one season in advance at all times.</p>
+  </section>
+
+  <!-- Article 4 -->
+  <section class="article-block" id="art4">
+    <h2 class="article-title"><span class="article-num">Art. 4</span> Startup Draft</h2>
+    <h3>4.1 Format — 3rd Round Reversal</h3>
+    <p>The startup draft follows a 3rd Round Reversal format: Rounds 1 and 2 follow standard snake order. Round 3 repeats the same direction as Round 2 (rather than reversing again, as a standard snake draft would). Standard snake order resumes for all rounds thereafter.</p>
+    <p class="note">This format prevents the owner who picks last in Round 1 from also picking near-immediately again at the top of Round 3.</p>
+    <h3>4.2 No Trading</h3>
+    <p>No trades of any kind are permitted during the startup draft. Trading opens immediately once the startup draft concludes.</p>
+    <h3>4.3 Draft Order</h3>
+    <p>The startup draft order is randomized three (3) times. The final (third) randomization stands as the official draft order.</p>
+  </section>
+
+  <!-- Article 5 -->
+  <section class="article-block" id="art5">
+    <h2 class="article-title"><span class="article-num">Art. 5</span> Roster Construction</h2>
+    <h3>5.1 Starting Lineup — 10 Spots</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Position</th><th>Slots</th></tr></thead>
+        <tbody>
+          <tr><td>Quarterback (QB)</td><td>1</td></tr>
+          <tr><td>Running Back (RB)</td><td>2</td></tr>
+          <tr><td>Wide Receiver (WR)</td><td>3</td></tr>
+          <tr><td>Tight End (TE)</td><td>1</td></tr>
+          <tr><td>FLEX (RB/WR/TE)</td><td>2</td></tr>
+          <tr><td>SUPERFLEX (QB/RB/WR/TE)</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>5.2 Bench, Taxi Squad &amp; Injured Reserve</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Roster Component</th><th>Spots</th></tr></thead>
+        <tbody>
+          <tr><td>Bench</td><td>12</td></tr>
+          <tr><td>Total Active Roster (Starters + Bench)</td><td class="highlight-value">22</td></tr>
+          <tr><td>Taxi Squad</td><td>4</td></tr>
+          <tr><td>Injured Reserve (IR)</td><td>4</td></tr>
+          <tr><td>Maximum Total Roster (Active + Taxi + IR)</td><td class="highlight-value">30</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Article 6 -->
+  <section class="article-block" id="art6">
+    <h2 class="article-title"><span class="article-num">Art. 6</span> Scoring Settings</h2>
+    <h3>6.1 Offense Scoring</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th>Points</th></tr></thead>
+        <tbody>
+          <tr><td>Passing Yards</td><td>0.04 / yard (1 pt per 25 yds)</td></tr>
+          <tr><td>Passing Touchdown</td><td>4 pts</td></tr>
+          <tr><td>Interception Thrown</td><td>-2 pts</td></tr>
+          <tr><td>Rushing Yards</td><td>0.1 / yard (1 pt per 10 yds)</td></tr>
+          <tr><td>Rushing Touchdown</td><td>6 pts</td></tr>
+          <tr><td>Receiving Yards</td><td>0.1 / yard (1 pt per 10 yds)</td></tr>
+          <tr><td>Receiving Touchdown</td><td>6 pts</td></tr>
+          <tr><td>Reception — Running Back</td><td>0.5 PPR</td></tr>
+          <tr><td>Reception — Wide Receiver</td><td>1.0 PPR</td></tr>
+          <tr><td>Reception — Tight End</td><td class="gold-value">1.5 PPR (TE Premium)</td></tr>
+          <tr><td>Rushing First Down</td><td>0.5 pts</td></tr>
+          <tr><td>Receiving First Down</td><td>0.5 pts</td></tr>
+          <tr><td>2-Point Conversion (pass / rush / rec)</td><td>2 pts</td></tr>
+          <tr><td>Fumble Lost</td><td>-2 pts</td></tr>
+          <tr><td>Offensive Fumble Recovery TD</td><td>6 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Kickers (K) and Team Defense/Special Teams (D/ST) are not used in this league — no roster spots or scoring apply to either.</p>
+  </section>
+
+  <!-- Article 7 -->
+  <section class="article-block" id="art7">
+    <h2 class="article-title"><span class="article-num">Art. 7</span> Franchise Tag System</h2>
+    <h3>7.1 Purpose</h3>
+    <p>The Franchise Tag exists to reward loyalty between a franchise and its players, allowing each owner to designate a "franchise player" each season.</p>
+    <h3>7.2 Tagging Rules</h3>
+    <ul>
+      <li>A franchise may have only one tagged Franchise Player at a time.</li>
+      <li>The tagged player does not need to be the same player each season — but tagging the same player across consecutive seasons builds tier status and benefits.</li>
+      <li>If a franchise does not tag a player in a given season, they carry no tagged player that season and their consecutive-tag streak resets to 0.</li>
+      <li><strong>Tagging Deadline:</strong> all franchise tags must be submitted by the end of the weekend before the NFL regular season kicks off.</li>
+      <li>To receive any benefit for a given season's tag, the tagged player must remain on the franchise's roster for the entire season.</li>
+    </ul>
+    <h3>7.3 Tier System</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>Consecutive Seasons</th><th>Benefit</th></tr></thead>
+        <tbody>
+          <tr><td>Bronze</td><td>1 season</td><td>No benefit</td></tr>
+          <tr><td>Silver</td><td>2 consecutive seasons</td><td class="highlight-value">+$10 FAAB at season start</td></tr>
+          <tr><td class="gold-value">Gold</td><td>3–4 consecutive seasons</td><td class="highlight-value">+$20 FAAB at season start</td></tr>
+          <tr><td class="gold-value">Franchise Legend</td><td>5 consecutive seasons</td><td class="highlight-value">+$25 FAAB at season start</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Bonus FAAB is added annually at the same time as the standard FAAB reset (Article 2.4).</p>
+    <h3>7.4 Milestone Comp Picks</h3>
+    <ul>
+      <li><strong>Gold Milestone (Year 3):</strong> reaching Gold tier in Year 3 awards the franchise a 4th round rookie comp pick in the following rookie draft.</li>
+      <li><strong>Legend Milestone (Year 5):</strong> reaching Franchise Legend in Year 5 awards the franchise a 3rd round rookie comp pick in the following rookie draft.</li>
+      <li><strong>Milestone Requirement:</strong> to receive a comp pick, the tagged player must (a) remain on the franchise's roster the entire season, and (b) start a minimum of 7 games, if healthy enough to do so.</li>
+    </ul>
+    <h3>7.5 Dropping a Tagged Player — Penalty</h3>
+    <p>If an owner drops their tagged Franchise Player during the season (breaking the full-season roster requirement), the owner pays a FAAB penalty based on the player's tier at the time of the drop:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier Dropped</th><th>Penalty</th></tr></thead>
+        <tbody>
+          <tr><td>Bronze</td><td>$10 FAAB</td></tr>
+          <tr><td>Silver</td><td>$15 FAAB</td></tr>
+          <tr><td class="gold-value">Gold</td><td>$25 FAAB</td></tr>
+          <tr><td class="gold-value">Legend</td><td>$35 FAAB</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>7.6 Trading a Tagged Player — Acquisition Cost</h3>
+    <p>If a tagged Franchise Player is traded, the acquiring team owes the trading-away team additional compensation on top of whatever else is exchanged in the trade:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>Buyer Pays Seller</th></tr></thead>
+        <tbody>
+          <tr><td>Bronze</td><td>$15 FAAB</td></tr>
+          <tr><td>Silver</td><td>$25 FAAB</td></tr>
+          <tr><td class="gold-value">Gold</td><td>Acquiring team's next owned future 4th round pick</td></tr>
+          <tr><td class="gold-value">Legend</td><td>Acquiring team's next owned future 3rd round pick</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>7.7 Tag Reset on Acquisition</h3>
+    <p>A tagged player acquired via trade does not bring their tier or streak with them — their consecutive-tag streak resets to 0 upon joining the new franchise. The acquiring team may not tag that player until the next tagging deadline (Article 7.2). The new franchise may then begin a fresh tag streak with that player if they choose.</p>
+    <h3>7.8 Record-Keeping</h3>
+    <p>The current Franchise Tag status of each player is documented via Commissioner Notes on that player within Sleeper. The League Notes maintain a historical record of every player who has reached Franchise Legend status.</p>
+  </section>
+
+  <!-- Article 8 -->
+  <section class="article-block" id="art8">
+    <h2 class="article-title"><span class="article-num">Art. 8</span> Taxi Squad</h2>
+    <p>Rookie players are taxi-squad eligible for one (1) year — their rookie season, or first year on a roster. Each franchise carries 4 taxi squad spots (Article 5.2).</p>
+  </section>
+
+  <!-- Article 9 -->
+  <section class="article-block" id="art9">
+    <h2 class="article-title"><span class="article-num">Art. 9</span> Waivers</h2>
+    <h3>9.1 Processing</h3>
+    <p>Waivers are processed nightly at midnight, every night of the season.</p>
+    <h3>9.2 Freeze Period</h3>
+    <p>Waivers freeze following the Super Bowl and reopen after the conclusion of the annual rookie draft. The exact reopening date and time will be announced by the Commissioner each year.</p>
+  </section>
+
+  <!-- Article 10 -->
+  <section class="article-block" id="art10">
+    <h2 class="article-title"><span class="article-num">Art. 10</span> Trades</h2>
+    <h3>10.1 Trade Processing</h3>
+    <p>Trades process instantly, with no standard review or veto period. The sole exception is in cases of obvious collusion: the Commissioner reviews such cases first, and only in extreme cases does the matter escalate to a full league vote (majority of all 14 owners, per Article 17).</p>
+    <h3>10.2 Trading Future Draft Picks</h3>
+    <p>Trading away a future draft pick of any round, for any future season, obligates the trading-away owner to remain financially committed — i.e., current on league dues — through each season those traded picks belong to.</p>
+    <p class="note">Example: if an owner trades away their 2028 4th round pick and their 2029 3rd round pick, that owner must be paid up through both the 2028 and 2029 seasons.</p>
+  </section>
+
+  <!-- Article 11 -->
+  <section class="article-block" id="art11">
+    <h2 class="article-title"><span class="article-num">Art. 11</span> Lineup Compliance</h2>
+    <p>Every franchise owner must set a legal starting lineup each week (all required starting slots filled with eligible players, no empty or illegal slots). Offenses are tracked per season and escalate as follows:</p>
+    <ol class="penalty-escalation">
+      <li><span class="offense-num">1st</span> <span>Warning</span></li>
+      <li><span class="offense-num">2nd</span> <span><span class="highlight-value">$20 FAAB</span> penalty</span></li>
+      <li><span class="offense-num">3rd</span> <span>Loss of the owner's next owned 3rd round rookie pick</span></li>
+      <li><span class="offense-num">4th</span> <span>Potential removal from the league, at the Commissioner's sole discretion — no league vote required</span></li>
+    </ol>
+  </section>
+
+  <!-- Article 12 -->
+  <section class="article-block" id="art12">
+    <h2 class="article-title"><span class="article-num">Art. 12</span> Rivalry Weeks</h2>
+    <h3>12.1 Designated Weeks</h3>
+    <p><strong>Week 6</strong> and <strong>Week 13</strong> are designated Rivalry Weeks.</p>
+    <h3>12.2 Rival Selection</h3>
+    <p>Following the startup draft, the Commissioner will go in reverse order of the startup draft and ask each franchise to select their rival, proceeding down the list until all rivalries are set.</p>
+    <h3>12.3 Rivalry Cycle</h3>
+    <p>Rivalries reset every 2 seasons. At the end of a 2-season cycle, franchises re-select rivals via the same reverse-order process — unless two rival franchises mutually agree to continue their existing rivalry for an additional cycle, in which case that pairing carries over.</p>
+    <h3>12.4 Rivalry Matchups</h3>
+    <p>Rival franchises play each other twice per season — once in Week 6 and once in Week 13 — regardless of the regular schedule otherwise generated.</p>
+    <h3>12.5 Rivalry Rewards</h3>
+    <ul>
+      <li>Winning a Rivalry Week matchup awards the winning team <span class="highlight-value">$10 FAAB</span>, usable only during the current season (does not roll over).</li>
+      <li>A franchise that wins both of its rivalry matchups in a season is awarded the <strong>Rivalry Cup</strong>, plus an additional <span class="highlight-value">$10 FAAB</span> added to their FAAB budget for the following season (applied at the standard reset, per Article 2.4).</li>
+    </ul>
+  </section>
+
+  <!-- Article 13 -->
+  <section class="article-block" id="art13">
+    <h2 class="article-title"><span class="article-num">Art. 13</span> Playoffs, Seeding &amp; Rookie Draft Order</h2>
+    <h3>13.1 Playoff Field</h3>
+    <p>Eight (8) of the league's 14 teams qualify for the championship bracket.</p>
+    <h3>13.2 Seeding</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Seeds</th><th>Determined By</th></tr></thead>
+        <tbody>
+          <tr><td>1 – 4</td><td>Total wins (head-to-head + league median combined, per Article 1.4)</td></tr>
+          <tr><td>5 – 7</td><td>Points For (PF)</td></tr>
+          <tr><td>8</td><td>Max Points</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>13.3 Round 1 Matchup Selection</h3>
+    <p>Once playoff qualifiers are announced, seeds select their own Round 1 opponent in seed order: #1 picks first, then #2, then #3, and so on, each selecting from the pool of remaining available opponents.</p>
+    <p>Each seed has a <strong>12-hour window</strong> to make their selection once it becomes their turn; the clock starts for #1 as soon as qualifiers are announced. If a seed fails to select within their 12-hour window, they are automatically matched with the lowest remaining available seed.</p>
+    <h3>13.4 Rookie Draft Order</h3>
+    <ul>
+      <li><strong>Picks 7–14:</strong> determined by championship bracket finish, reversed — the team finishing 8th in the bracket receives pick 7, 7th place receives pick 8, continuing up to the champion (1st place finish) receiving pick 14.</li>
+      <li><strong>Picks 1–6:</strong> determined by the 6 non-playoff teams, ordered by Max Points Forced — the worst-performing non-playoff team receives pick 1, and the best-performing non-playoff team receives pick 6.</li>
+    </ul>
+  </section>
+
+  <!-- Article 14 -->
+  <section class="article-block" id="art14">
+    <h2 class="article-title"><span class="article-num">Art. 14</span> Rookie Draft Format (Annual)</h2>
+    <p>Beginning with the season following the startup draft, all annual rookie drafts use a <strong>Linear (Straight)</strong> format — the same draft order established per Article 13.4 repeats every round, rather than snaking.</p>
+  </section>
+
+  <!-- Article 15 -->
+  <section class="article-block" id="art15">
+    <h2 class="article-title"><span class="article-num">Art. 15</span> Payouts</h2>
+    <p>The total season payout pool is <span class="gold-value">$420</span>, sourced from the $30 per-team buy-in across all 14 franchises (Article 3.1).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Prize</th><th>Amount</th></tr></thead>
+        <tbody>
+          <tr><td>League Champion</td><td class="gold-value">$200</td></tr>
+          <tr><td>Runner-Up</td><td>$75</td></tr>
+          <tr><td>Third Place</td><td>$40</td></tr>
+          <tr><td>Regular-Season Highest Points For</td><td>$35</td></tr>
+          <tr><td>Weekly High Score ($5 &times; 14 weeks)</td><td>$70</td></tr>
+          <tr><td style="font-weight:700; color: var(--text-primary);">Total</td><td class="gold-value">$420</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The league treasury (funded separately via Article 16 replacement-owner fees) is held apart from the season payout pool and is used for additional prizes at the Commissioner's discretion.</p>
+  </section>
+
+  <!-- Article 16 -->
+  <section class="article-block" id="art16">
+    <h2 class="article-title"><span class="article-num">Art. 16</span> Owner Departure &amp; Franchise Replacement</h2>
+    <p>If an owner leaves the league after having already prepaid dues for a future season, and a replacement owner takes over that franchise, the incoming owner pays half price to join (since the season is already funded). That half-price payment goes into the league treasury, to be used for additional prizes/payouts.</p>
+    <p>If an owner leaves the league without having prepaid for a future season, the replacement owner pays full price to join.</p>
+  </section>
+
+  <!-- Article 17 -->
+  <section class="article-block" id="art17">
+    <h2 class="article-title"><span class="article-num">Art. 17</span> Rule Changes &amp; Amendments</h2>
+    <p>New proposed rules and ideas are put to a poll/vote during the offseason. A proposal passes with a majority vote of all 14 owners (<strong>8 or more votes required</strong>, regardless of turnout).</p>
+    <p class="note">This constitution is a living document, subject to amendment per Article 17.</p>
+  </section>
+
+</main>

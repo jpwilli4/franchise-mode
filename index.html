@@ -1,0 +1,327 @@
+<title>Franchise Mode</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground: #080c18;
+    --ground-raised: rgba(10, 16, 36, 0.88);
+    --glow: #00b4ff;
+    --glow-soft: rgba(0, 180, 255, 0.35);
+    --glow-dim: rgba(0, 180, 255, 0.12);
+    --text-primary: #d8dfe8;
+    --text-muted: #4a5a6e;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #grid-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 48%,
+      transparent 0%,
+      rgba(8, 12, 24, 0.4) 50%,
+      rgba(8, 12, 24, 0.85) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.04) 0px,
+      rgba(0, 0, 0, 0.04) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    padding: 1.2rem 2rem;
+    background: var(--ground-raised);
+    border-bottom: 1px solid var(--glow-dim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow-soft);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  nav a:hover::after,
+  nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  nav a:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  .hero {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .accent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .accent-line {
+    width: clamp(2rem, 8vw, 5rem);
+    height: 1px;
+  }
+
+  .accent-line:first-child {
+    background: linear-gradient(90deg, transparent, var(--glow));
+  }
+
+  .accent-line:last-child {
+    background: linear-gradient(90deg, var(--glow), transparent);
+  }
+
+  .accent-diamond {
+    width: 7px;
+    height: 7px;
+    background: var(--glow);
+    transform: rotate(45deg);
+    box-shadow: 0 0 6px var(--glow-soft);
+    flex-shrink: 0;
+  }
+
+  .title {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    font-size: clamp(4.5rem, 13vw, 11rem);
+    line-height: 0.88;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow:
+      0 0 40px rgba(0, 180, 255, 0.35),
+      0 0 80px rgba(0, 180, 255, 0.12),
+      0 0 140px rgba(0, 180, 255, 0.04);
+    animation: glow-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      text-shadow:
+        0 0 40px rgba(0, 180, 255, 0.35),
+        0 0 80px rgba(0, 180, 255, 0.12),
+        0 0 140px rgba(0, 180, 255, 0.04);
+    }
+    50% {
+      text-shadow:
+        0 0 60px rgba(0, 180, 255, 0.55),
+        0 0 100px rgba(0, 180, 255, 0.2),
+        0 0 180px rgba(0, 180, 255, 0.08);
+    }
+  }
+
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    font-size: clamp(0.8rem, 1.8vw, 1.05rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 1rem;
+  }
+
+  .prompt {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--glow);
+    text-shadow: 0 0 10px var(--glow-soft);
+    animation: blink-prompt 2.2s step-end infinite;
+  }
+
+  @keyframes blink-prompt {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .title { animation: none; }
+    .prompt { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    nav { gap: 1rem; padding: 1rem 1rem; }
+    nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+  }
+</style>
+
+<canvas id="grid-canvas"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+
+<nav>
+  <a href="constitution.html">Constitution</a>
+  <a href="legends.html">Franchise Legends</a>
+  <a href="tags.html">Franchise Tags</a>
+</nav>
+
+<main class="hero">
+  <div class="accent">
+    <span class="accent-line"></span>
+    <span class="accent-diamond"></span>
+    <span class="accent-line"></span>
+  </div>
+  <h1 class="title">Franchise<br>Mode</h1>
+  <p class="subtitle">Fantasy Football League</p>
+</main>
+
+<div class="prompt" aria-hidden="true">Press Start</div>
+
+<script>
+  const canvas = document.getElementById('grid-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let offset = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2;
+    const horizon = h * 0.42;
+    const bottom = h;
+    const gridHeight = bottom - horizon;
+
+    ctx.lineWidth = 1;
+
+    // Vertical lines radiating from vanishing point
+    const vertCount = 28;
+    for (let i = -vertCount; i <= vertCount; i++) {
+      const ratio = i / vertCount;
+      const spread = ratio * w * 1.2;
+      const alpha = 0.05 * (1 - Math.abs(ratio) * 0.6);
+      ctx.strokeStyle = `rgba(0, 180, 255, ${alpha})`;
+      ctx.beginPath();
+      ctx.moveTo(cx, horizon);
+      ctx.lineTo(cx + spread, bottom);
+      ctx.stroke();
+    }
+
+    // Scrolling horizontal lines with perspective
+    const lineCount = 24;
+    const spacing = 100 / lineCount;
+
+    if (!reducedMotion) {
+      offset = (offset + 0.15) % spacing;
+    }
+
+    for (let i = 0; i < lineCount + 1; i++) {
+      const raw = (i * spacing + offset) / 100;
+      const t = Math.pow(raw, 2.2);
+      const y = horizon + t * gridHeight;
+
+      if (y < horizon || y > bottom) continue;
+
+      const alpha = t * 0.09;
+      ctx.strokeStyle = `rgba(0, 180, 255, ${alpha})`;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    // Center glow on the horizon
+    const grad = ctx.createRadialGradient(cx, horizon, 0, cx, horizon, w * 0.35);
+    grad.addColorStop(0, 'rgba(0, 180, 255, 0.03)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>

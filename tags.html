@@ -1,0 +1,152 @@
+<title>Franchise Tags</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground: #080c18;
+    --ground-raised: rgba(10, 16, 36, 0.88);
+    --glow: #00b4ff;
+    --glow-soft: rgba(0, 180, 255, 0.35);
+    --glow-dim: rgba(0, 180, 255, 0.12);
+    --text-primary: #d8dfe8;
+    --text-muted: #4a5a6e;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    padding: 1.2rem 2rem;
+    background: var(--ground-raised);
+    border-bottom: 1px solid var(--glow-dim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow-soft);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  nav a:hover::after,
+  nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  nav a:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 6px;
+    border-radius: 2px;
+  }
+
+  nav a.active {
+    color: var(--glow);
+  }
+
+  nav a.active::after {
+    transform: scaleX(1);
+  }
+
+  .center-message {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .center-message h1 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow: 0 0 30px rgba(0, 180, 255, 0.25);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .center-message p {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 1.5rem 0 0;
+    animation: pulse-muted 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-muted {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .center-message p { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    nav { gap: 1rem; padding: 1rem 1rem; }
+    nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+  }
+</style>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="constitution.html">Constitution</a>
+  <a href="legends.html">Franchise Legends</a>
+  <a href="tags.html" class="active">Franchise Tags</a>
+</nav>
+
+<main class="center-message">
+  <h1>Coming Soon After Draft!!</h1>
+  <p>Tag your franchise player once the season begins</p>
+</main>
