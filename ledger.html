@@ -1,0 +1,400 @@
+<title>Payment Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground: #080c18;
+    --ground-raised: rgba(10, 16, 36, 0.88);
+    --surface: #0d1225;
+    --surface-border: rgba(0, 180, 255, 0.08);
+    --glow: #00b4ff;
+    --glow-soft: rgba(0, 180, 255, 0.35);
+    --glow-dim: rgba(0, 180, 255, 0.12);
+    --glow-faint: rgba(0, 180, 255, 0.05);
+    --text-primary: #d8dfe8;
+    --text-body: #a8b4c4;
+    --text-muted: #4a5a6e;
+    --gold: #e8a910;
+    --card-bg: #0c1322;
+    --card-border: rgba(0, 180, 255, 0.1);
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --paid: #2ecc71;
+    --paid-bg: rgba(46, 204, 113, 0.1);
+    --unpaid: #4a5a6e;
+    --unpaid-bg: rgba(74, 90, 110, 0.06);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text-body);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    padding: 1.2rem 2rem;
+    background: var(--ground-raised);
+    border-bottom: 1px solid var(--glow-dim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow-soft);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+  nav a:hover, nav a:focus-visible { color: var(--text-primary); outline: none; }
+  nav a:hover::after, nav a:focus-visible::after { transform: scaleX(1); }
+  nav a:focus-visible { outline: 2px solid var(--glow); outline-offset: 6px; border-radius: 2px; }
+  nav a.active { color: var(--glow); }
+  nav a.active::after { transform: scaleX(1); }
+
+  .page-header {
+    padding: 7rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .page-header h1 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow: 0 0 30px rgba(0, 180, 255, 0.25);
+    margin: 0;
+    line-height: 1;
+  }
+  .page-header .page-sub {
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+  }
+
+  .stat-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--surface-border);
+    flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .section-wrap {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+  .section-title {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title .accent-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glow-dim), transparent);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--card-bg);
+    padding: 0.9rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--card-border);
+  }
+  thead th:first-child {
+    text-align: left;
+    padding-left: 1.3rem;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(0, 180, 255, 0.04);
+    transition: background 0.2s;
+  }
+  tbody tr:hover {
+    background: rgba(0, 180, 255, 0.03);
+  }
+
+  tbody td {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  tbody td:first-child {
+    text-align: left;
+    padding-left: 1.3rem;
+  }
+
+  .franchise-name {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .badge.paid {
+    color: var(--paid);
+    background: var(--paid-bg);
+  }
+  .badge.unpaid {
+    color: var(--unpaid);
+    background: var(--unpaid-bg);
+  }
+
+  @media (max-width: 480px) {
+    nav { gap: 1rem; padding: 1rem 1rem; }
+    nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+    .page-header { padding: 6.5rem 1.25rem 2rem; }
+    .section-wrap { padding: 2rem 1.25rem 3rem; }
+    .stat-bar { gap: 1.5rem; }
+  }
+</style>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="constitution.html">Constitution</a>
+  <a href="legends.html">Franchise Legends</a>
+  <a href="tags.html">Franchise Tags</a>
+  <a href="rivals.html">Rivals</a>
+  <a href="ledger.html" class="active">Payment Ledger</a>
+</nav>
+
+<header class="page-header">
+  <h1>Payment Ledger</h1>
+  <p class="page-sub">League Dues &middot; Transparency for All Owners</p>
+</header>
+
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-label">Total Franchises</div>
+    <div class="stat-value">14</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Paid Through 2027</div>
+    <div class="stat-value">14 / 14</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Seasons Tracked</div>
+    <div class="stat-value">2026 — 2030</div>
+  </div>
+</div>
+
+<section class="section-wrap">
+  <h2 class="section-title">Franchise Payment Status <span class="accent-line"></span></h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Franchise</th>
+          <th>2026</th>
+          <th>2027</th>
+          <th>2028</th>
+          <th>2029</th>
+          <th>2030</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="franchise-name">MitchC23</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">blitzkriegbalers</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">HomemadeSalsa</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">jimpjimp</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">TornBrownsFan</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">treyday89</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">itsTHEkenny</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">MrWorldbeater</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">jpwilli1</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">BlueRoofBandits</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">BloneSack</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">damocon</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">liamgranty</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+        <tr>
+          <td><span class="franchise-name">ChaseMode1</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge paid">Paid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+          <td><span class="badge unpaid">Unpaid</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
