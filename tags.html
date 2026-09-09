@@ -1,31 +1,48 @@
 <title>Franchise Tags</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
   :root {
     --ground: #080c18;
     --ground-raised: rgba(10, 16, 36, 0.88);
+    --surface: #0d1225;
+    --surface-border: rgba(0, 180, 255, 0.08);
     --glow: #00b4ff;
     --glow-soft: rgba(0, 180, 255, 0.35);
     --glow-dim: rgba(0, 180, 255, 0.12);
+    --glow-faint: rgba(0, 180, 255, 0.05);
     --text-primary: #d8dfe8;
+    --text-body: #a8b4c4;
     --text-muted: #4a5a6e;
+    --gold: #e8a910;
+    --card-bg: #0c1322;
+    --card-border: rgba(0, 180, 255, 0.1);
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+    --bronze: #c98a5a;
+    --bronze-bg: rgba(201, 138, 90, 0.12);
+    --silver: #a0aab4;
+    --silver-bg: rgba(160, 170, 180, 0.12);
+    --gold-chip: #e8a910;
+    --gold-chip-bg: rgba(232, 169, 16, 0.12);
+    --legend: #c79bcb;
+    --legend-bg: rgba(199, 155, 203, 0.12);
   }
 
   body {
     background: var(--ground);
-    color: var(--text-primary);
+    color: var(--text-body);
     font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.6;
     margin: 0;
-    height: 100vh;
-    overflow: hidden;
   }
 
+  /* Nav */
   nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     z-index: 20;
     display: flex;
     align-items: center;
@@ -37,7 +54,6 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-
   nav a {
     font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
@@ -50,13 +66,10 @@
     position: relative;
     transition: color 0.3s ease;
   }
-
   nav a::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 2px;
     background: var(--glow);
     box-shadow: 0 0 8px var(--glow-soft);
@@ -64,47 +77,22 @@
     transform-origin: center;
     transition: transform 0.3s ease;
   }
+  nav a:hover, nav a:focus-visible { color: var(--text-primary); outline: none; }
+  nav a:hover::after, nav a:focus-visible::after { transform: scaleX(1); }
+  nav a:focus-visible { outline: 2px solid var(--glow); outline-offset: 6px; border-radius: 2px; }
+  nav a.active { color: var(--glow); }
+  nav a.active::after { transform: scaleX(1); }
 
-  nav a:hover,
-  nav a:focus-visible {
-    color: var(--text-primary);
-    outline: none;
-  }
-
-  nav a:hover::after,
-  nav a:focus-visible::after {
-    transform: scaleX(1);
-  }
-
-  nav a:focus-visible {
-    outline: 2px solid var(--glow);
-    outline-offset: 6px;
-    border-radius: 2px;
-  }
-
-  nav a.active {
-    color: var(--glow);
-  }
-
-  nav a.active::after {
-    transform: scaleX(1);
-  }
-
-  .center-message {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  /* Page Header */
+  .page-header {
+    padding: 7rem 2rem 2.5rem;
     text-align: center;
-    padding: 0 1rem;
+    border-bottom: 1px solid var(--surface-border);
   }
-
-  .center-message h1 {
+  .page-header h1 {
     font-family: 'Teko', sans-serif;
     font-weight: 700;
-    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-primary);
@@ -112,30 +100,175 @@
     margin: 0;
     line-height: 1;
   }
-
-  .center-message p {
-    font-family: 'Rajdhani', sans-serif;
+  .page-header .page-sub {
     font-weight: 500;
-    font-size: 1.1rem;
-    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin: 1.5rem 0 0;
-    animation: pulse-muted 3s ease-in-out infinite;
+    margin-top: 0.75rem;
   }
 
-  @keyframes pulse-muted {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+  /* Stat bar */
+  .stat-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--surface-border);
+    flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .center-message p { animation: none; opacity: 1; }
+  /* Section */
+  .section-wrap {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
   }
+  .section-title {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title .accent-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glow-dim), transparent);
+  }
+
+  /* Tag card grid */
+  .tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: 1rem;
+  }
+
+  /* Tag card base */
+  .tag-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: border-color 0.3s;
+  }
+
+  .tag-card .team-name {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  /* Player row */
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 1.8rem;
+  }
+  .player-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+  .player-pos {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--glow);
+    background: var(--glow-faint);
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+  }
+
+  /* Tier chip */
+  .tier-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    width: fit-content;
+  }
+  .tier-chip.bronze { color: var(--bronze); background: var(--bronze-bg); }
+  .tier-chip.silver { color: var(--silver); background: var(--silver-bg); }
+  .tier-chip.gold   { color: var(--gold-chip); background: var(--gold-chip-bg); }
+  .tier-chip.legend  { color: var(--legend); background: var(--legend-bg); }
+
+  .streak-line {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Muted states: awaiting-draft, pending, no-tag */
+  .tag-card.muted {
+    opacity: 0.55;
+    border-color: rgba(0, 180, 255, 0.05);
+  }
+  .tag-card.muted .team-name {
+    color: var(--text-body);
+  }
+
+  .status-line {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* Tagged (active) card — subtle left accent */
+  .tag-card.tagged {
+    border-left: 3px solid var(--bronze);
+  }
+  .tag-card.tagged.tier-silver { border-left-color: var(--silver); }
+  .tag-card.tagged.tier-gold   { border-left-color: var(--gold-chip); }
+  .tag-card.tagged.tier-legend { border-left-color: var(--legend); }
 
   @media (max-width: 480px) {
     nav { gap: 1rem; padding: 1rem 1rem; }
     nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+    .page-header { padding: 6.5rem 1.25rem 2rem; }
+    .section-wrap { padding: 2rem 1.25rem 3rem; }
+    .stat-bar { gap: 1.5rem; }
+    .tag-grid { grid-template-columns: 1fr; }
   }
 </style>
 
@@ -147,7 +280,172 @@
   <a href="rivals.html">Rivals</a>
 </nav>
 
-<main class="center-message">
-  <h1>Coming Soon After Draft!!</h1>
-  <p>Tag your franchise player once the season begins</p>
-</main>
+<header class="page-header">
+  <h1>Franchise Tags</h1>
+  <p class="page-sub">Article 7 &middot; Tag Your Franchise Player</p>
+</header>
+
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-label">Season</div>
+    <div class="stat-value">2026</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Tagged Franchises</div>
+    <div class="stat-value">8 / 14</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Highest Tier Active</div>
+    <div class="stat-value">Bronze</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Tagging Deadline</div>
+    <div class="stat-value">Sep 11, 2026</div>
+  </div>
+</div>
+
+<section class="section-wrap">
+  <h2 class="section-title">2026 Franchises <span class="accent-line"></span></h2>
+
+  <div class="tag-grid">
+
+    <div class="tag-card tagged">
+      <span class="team-name">MitchC23</span>
+      <div class="player-row">
+        <span class="player-name">Caleb Williams</span>
+        <span class="player-pos">QB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">blitzkriegbalers</span>
+      <div class="player-row">
+        <span class="player-name">Justin Herbert</span>
+        <span class="player-pos">QB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">HomemadeSalsa</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">jimpjimp</span>
+      <div class="player-row">
+        <span class="player-name">Bijan Robinson</span>
+        <span class="player-pos">RB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">TornBrownsFan</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">treyday89</span>
+      <div class="player-row">
+        <span class="player-name">Drake Maye</span>
+        <span class="player-pos">QB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">itsTHEkenny</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">MrWorldbeater</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">jpwilli1</span>
+      <div class="player-row">
+        <span class="player-name">Jeremiyah Love</span>
+        <span class="player-pos">RB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">BlueRoofBandits</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">BloneSack</span>
+      <div class="player-row">
+        <span class="player-name">Puka Nacua</span>
+        <span class="player-pos">WR</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">damocon</span>
+      <div class="player-row">
+        <span class="player-name">CeeDee Lamb</span>
+        <span class="player-pos">WR</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card tagged">
+      <span class="team-name">liamgranty</span>
+      <div class="player-row">
+        <span class="player-name">Jahmyr Gibbs</span>
+        <span class="player-pos">RB</span>
+      </div>
+      <span class="tier-chip bronze">Bronze</span>
+      <span class="streak-line">Year 1 — Tagged since 2026</span>
+    </div>
+
+    <div class="tag-card muted">
+      <span class="team-name">ChaseMode1</span>
+      <span class="status-line">Tagged player: TBD — set after startup draft</span>
+    </div>
+
+  </div>
+</section>
+
+<!--
+  TAGGED CARD TEMPLATE (for when franchise tags are submitted):
+
+  <div class="tag-card tagged">
+    <span class="team-name">TeamName</span>
+    <div class="player-row">
+      <span class="player-name">Player Name</span>
+      <span class="player-pos">WR</span>
+    </div>
+    <span class="tier-chip bronze">Bronze</span>
+    <span class="streak-line">Year 1 — 1 consecutive season</span>
+  </div>
+
+  PENDING STATE (post-draft, pre-deadline):
+
+  <div class="tag-card muted">
+    <span class="team-name">TeamName</span>
+    <span class="status-line">Tag decision pending — deadline Sep 6, 2026</span>
+  </div>
+
+  NO TAG STATE (deadline passed, chose not to tag):
+
+  <div class="tag-card muted">
+    <span class="team-name">TeamName</span>
+    <span class="status-line">No franchise tag this season</span>
+  </div>
+-->
