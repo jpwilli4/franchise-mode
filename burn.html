@@ -1,0 +1,519 @@
+<title>The Burn Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground: #080c18;
+    --ground-raised: rgba(10, 16, 36, 0.88);
+    --surface: #0d1225;
+    --surface-border: rgba(0, 180, 255, 0.08);
+    --glow: #00b4ff;
+    --glow-soft: rgba(0, 180, 255, 0.35);
+    --glow-dim: rgba(0, 180, 255, 0.12);
+    --glow-faint: rgba(0, 180, 255, 0.05);
+    --text-primary: #d8dfe8;
+    --text-body: #a8b4c4;
+    --text-muted: #4a5a6e;
+    --gold: #e8a910;
+    --card-bg: #0c1322;
+    --card-border: rgba(0, 180, 255, 0.1);
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --burn: #ff4d2e;
+    --burn-soft: rgba(255, 77, 46, 0.25);
+    --burn-dim: rgba(255, 77, 46, 0.1);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text-body);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    padding: 1.2rem 2rem;
+    background: var(--ground-raised);
+    border-bottom: 1px solid var(--glow-dim);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  nav a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--glow);
+    box-shadow: 0 0 8px var(--glow-soft);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+  nav a:hover, nav a:focus-visible { color: var(--text-primary); outline: none; }
+  nav a:hover::after, nav a:focus-visible::after { transform: scaleX(1); }
+  nav a:focus-visible { outline: 2px solid var(--glow); outline-offset: 6px; border-radius: 2px; }
+  nav a.active { color: var(--burn); }
+  nav a.active::after { transform: scaleX(1); background: var(--burn); box-shadow: 0 0 8px var(--burn-soft); }
+
+  .page-header {
+    padding: 7rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .page-header h1 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--burn);
+    text-shadow: 0 0 30px var(--burn-soft);
+    margin: 0;
+    line-height: 1;
+  }
+  .page-header .page-sub {
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+  }
+
+  .content-layout {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 14rem;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* Archive sidebar */
+  .archive-sidebar {
+    position: sticky;
+    top: 5.5rem;
+  }
+  .archive-title {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .archive-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .archive-list li a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .archive-list li a:hover {
+    background: var(--burn-dim);
+    color: var(--text-body);
+  }
+  .archive-list li a.current {
+    background: var(--burn-dim);
+    color: var(--burn);
+    font-weight: 600;
+  }
+
+  /* Report content */
+  .report { line-height: 1.75; }
+
+  .report .week-label {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--burn);
+    margin: 0 0 0.25rem;
+  }
+  .report .season-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .report .intro {
+    font-size: 1.05rem;
+    color: var(--text-body);
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  .report h2 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .report h3 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    margin: 1.8rem 0 0.4rem;
+  }
+
+  /* Matchup table */
+  .matchup-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  .matchup-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 400px;
+  }
+  .matchup-table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--card-bg);
+    padding: 0.7rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .matchup-table tbody td {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.92rem;
+    border-bottom: 1px solid rgba(0, 180, 255, 0.04);
+  }
+  .matchup-table .vs {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    color: var(--burn);
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Standings table */
+  .standings-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  .standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 420px;
+  }
+  .standings-table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--card-bg);
+    padding: 0.7rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .standings-table thead th:nth-child(3),
+  .standings-table thead th:nth-child(4) { text-align: center; }
+  .standings-table tbody td {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(0, 180, 255, 0.04);
+    font-variant-numeric: tabular-nums;
+  }
+  .standings-table tbody td:nth-child(3),
+  .standings-table tbody td:nth-child(4) {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .standings-table tbody td:first-child {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    width: 2.5rem;
+    text-align: center;
+  }
+
+  /* Spotlight cards */
+  .spotlight {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-left: 3px solid var(--burn);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .spotlight .franchise {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+  .spotlight .roast {
+    font-size: 0.9rem;
+    color: var(--text-body);
+    line-height: 1.7;
+  }
+  .spotlight .goal {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--burn);
+    margin-top: 0.5rem;
+  }
+
+  .report .footer-note {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  @media (max-width: 700px) {
+    .content-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .archive-sidebar {
+      position: static;
+      order: -1;
+      margin-bottom: 2rem;
+    }
+    .archive-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    nav { gap: 1rem; padding: 1rem 1rem; }
+    nav a { font-size: 0.72rem; letter-spacing: 0.15em; }
+    .page-header { padding: 6.5rem 1.25rem 2rem; }
+    .content-layout { padding: 2rem 1.25rem 3rem; }
+  }
+</style>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="constitution.html">Constitution</a>
+  <a href="legends.html">Franchise Legends</a>
+  <a href="tags.html">Franchise Tags</a>
+  <a href="rivals.html">Rivals</a>
+  <a href="ledger.html">Payment Ledger</a>
+  <a href="burn.html" class="active">Burn Report</a>
+</nav>
+
+<header class="page-header">
+  <h1>The Burn Report</h1>
+  <p class="page-sub">Scores are real &middot; Jokes are semi-real &middot; Feelings are not considered</p>
+</header>
+
+<div class="content-layout">
+
+  <main class="report" id="week1">
+    <div class="week-label">Week 1</div>
+    <div class="season-label">2026 Season &middot; Franchise Mode</div>
+
+    <p class="intro">Buckle up, degenerates. Kickoff hasn't happened yet, so every score below reads a beautiful, meaningless 0–0. Enjoy the last moment all season where you get to pretend your team doesn't have a fatal flaw.</p>
+
+    <h2>This Week's Matchups</h2>
+
+    <div class="matchup-table-wrap">
+      <table class="matchup-table">
+        <thead>
+          <tr><th>#</th><th>Team</th><th></th><th>Team</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>bltzkriegbalers</td><td class="vs">VS</td><td>jimpjimp</td></tr>
+          <tr><td>2</td><td>jpwilli1</td><td class="vs">VS</td><td>Plums (damocon)</td></tr>
+          <tr><td>3</td><td>HomemadeSalsa</td><td class="vs">VS</td><td>BloneSack</td></tr>
+          <tr><td>4</td><td>MrWorldbeater</td><td class="vs">VS</td><td>ChaseMode1</td></tr>
+          <tr><td>5</td><td>TornBrownsFan</td><td class="vs">VS</td><td>liamgranty</td></tr>
+          <tr><td>6</td><td>Shit diarrhea Sandwhich (treyday89)</td><td class="vs">VS</td><td>BlueRoofBandits</td></tr>
+          <tr><td>7</td><td>MitchC23</td><td class="vs">VS</td><td>itsTHEkenny</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Standings</h2>
+
+    <p>Everyone is 0-0-0. Every franchise is technically undefeated and technically winless at the same time, which is the only time all season your record will accurately reflect your GM skills.</p>
+
+    <div class="standings-wrap">
+      <table class="standings-table">
+        <thead>
+          <tr><th>#</th><th>Franchise</th><th>Record</th><th>PF</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>bltzkriegbalers</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>2</td><td>HomemadeSalsa</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>3</td><td>TornBrownsFan</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>4</td><td>MitchC23</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>5</td><td>Plums (damocon)</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>6</td><td>itsTHEkenny</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>7</td><td>jpwilli1</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>8</td><td>BloneSack</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>9</td><td>Shit diarrhea Sandwhich (treyday89)</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>10</td><td>ChaseMode1</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>11</td><td>MrWorldbeater</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>12</td><td>BlueRoofBandits</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>13</td><td>liamgranty</td><td>0-0-0</td><td>0.0</td></tr>
+          <tr><td>14</td><td>jimpjimp</td><td>0-0-0</td><td>0.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Franchise Spotlight</h2>
+
+    <div class="spotlight">
+      <div class="franchise">jpwilli1 (Commissioner)</div>
+      <div class="roast">Waiver #7, dead center of the pack, which is exactly where the person who writes the league rules and sets the waiver clock should be terrified to land. Nothing says "impartial" like finishing average in your own league.</div>
+      <div class="goal">Goal for the season: prove that "commissioner" isn't a synonym for "guy who's good at bylaws, bad at football."</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Shit diarrhea Sandwhich (treyday89)</div>
+      <div class="roast">Owns the league's biggest taxi squad (4 stashes) and, somehow, an even bigger commitment to the bit that is this team name. This is a front office playing four years down the road while the current roster is held together with waiver-wire tape.</div>
+      <div class="goal">Goal for the season: lose as many games as possible with dignity, and let the taxi squad ferment into something edible by 2028.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">HomemadeSalsa</div>
+      <div class="roast">Waiver priority #2, which in this league means "recently one of the worst teams alive," paired with a player already parked on IR before Week 1 even kicked off. The recipe needs work.</div>
+      <div class="goal">Goal for the season: stop the bleeding, salvage two or three usable ingredients, and pray the pico de gallo isn't actually just regret.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">bltzkriegbalers</div>
+      <div class="roast">Dead last in waiver priority (#1) with zero players stashed on the taxi squad, meaning this team has no future assets banked and no recent success to show for it either. All gas, no plan, no parachute.</div>
+      <div class="goal">Goal for the season: win now because there is, quite literally, no later to punt to.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">MitchC23</div>
+      <div class="roast">Comfortably, forgettably middle-of-the-pack (waiver #4), running a roster with one man down on IR and three taxi stashes quietly cooking in the background. The definition of "fine."</div>
+      <div class="goal">Goal for the season: retool on the fly without anyone noticing you were ever rebuilding at all.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">TornBrownsFan</div>
+      <div class="roast">A name that is either a Cleveland Browns fan or a description of this roster after this season, and possibly both. Sitting at waiver #3 with three taxi squad kids stashed like emergency rations.</div>
+      <div class="goal">Goal for the season: brace for the inevitable, root for the rookies, accept that suffering built character (it did not; it built a losing record).</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">BloneSack</div>
+      <div class="roast">Two players already on Injured Reserve before a single snap of real football has been played this year. That's not bad luck, that's a pattern.</div>
+      <div class="goal">Goal for the season: survive the trainer's room, hope the taxi squad depth (2 stashed) is enough to paper over the injury report by Week 8.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">MrWorldbeater</div>
+      <div class="roast">A name that promises global domination, backed up by a healthy roster (zero IR, zero taxi stashes) and a high waiver slot (#11) suggesting recent success. No prospects stashed means no excuses either.</div>
+      <div class="goal">Goal for the season: live up to the username or change it — there is no in-between here.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">BlueRoofBandits</div>
+      <div class="roast">Riding high waiver priority (#12) off presumably recent success, but already running two players on IR before kickoff. Bandits who stole a good record last year and are now getting robbed by the training staff.</div>
+      <div class="goal">Goal for the season: outrun the injury bug long enough to steal one more playoff spot.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Plums (damocon)</div>
+      <div class="roast">The league's other max-taxi-squad team (4 stashes) with an IR body already on the shelf, quietly building a juggernaut for a season that isn't this one. Drawing jpwilli1 in Week 1 is either a gift or a trap depending on how you feel about the commissioner.</div>
+      <div class="goal">Goal for the season: treat 2026 as a bridge year and let the fruit ripen for 2027.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">ChaseMode1</div>
+      <div class="roast">A name built entirely around perpetually being one step behind, sitting at waiver #10 with a clean, fully-active roster (no IR, no taxi). No excuses, no prospects to hide behind.</div>
+      <div class="goal">Goal for the season: finally catch up to whoever you've been chasing and lead a division for once.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">jimpjimp</div>
+      <div class="roast">Dead last in the waiver order in the <em>good</em> way: pick #14 means this roster was presumably the class of the league recently, and with zero taxi stashes and zero IR bodies, it's all-in on right now.</div>
+      <div class="goal">Goal for the season: go back-to-back, because a roster this loaded has zero excuses for anything less.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">itsTHEkenny</div>
+      <div class="roast">Solidly mid-table on paper (waiver #6), fully healthy, no taxi squad to speak of. The quiet, unassuming team nobody's talking about, which is exactly how sleeper (pun intended) seasons start.</div>
+      <div class="goal">Goal for the season: prove last year's finish wasn't a fluke and sneak into the playoffs while everyone else is busy roasting each other.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">liamgranty</div>
+      <div class="roast">An elite waiver slot (#13, near the top of the standings pecking order) completely undercut by THREE players already on Injured Reserve before the season has even started. This is a Ferrari with three flat tires.</div>
+      <div class="goal">Goal for the season: nurse the roster back to health fast enough to cash in a genuinely good draft/waiver position before it goes to waste.</div>
+    </div>
+
+    <p class="footer-note">The Burn Report updates weekly. Scores are real, jokes are semi-real, feelings are not considered.</p>
+  </main>
+
+  <aside class="archive-sidebar">
+    <h3 class="archive-title">Archive</h3>
+    <ul class="archive-list">
+      <li><a href="#week1" class="current">Week 1</a></li>
+    </ul>
+  </aside>
+
+</div>
