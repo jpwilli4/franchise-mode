@@ -512,8 +512,19 @@
   <aside class="archive-sidebar">
     <h3 class="archive-title">Archive</h3>
     <ul class="archive-list">
-      <li><a href="#week1" class="current">Week 1</a></li>
+      <li><a href="#week1" onclick="showWeek('week1')" class="current">Week 1</a></li>
     </ul>
   </aside>
 
 </div>
+
+<script>
+  function showWeek(id) {
+    document.querySelectorAll('.report').forEach(function(r) {
+      r.hidden = r.id !== id;
+    });
+    document.querySelectorAll('.archive-list a').forEach(function(a) {
+      a.classList.toggle('current', a.getAttribute('href') === '#' + id);
+    });
+  }
+</script>
