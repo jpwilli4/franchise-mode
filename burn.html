@@ -241,6 +241,16 @@
     font-size: 0.85rem;
     letter-spacing: 0.06em;
   }
+  .matchup-table .score {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .matchup-table .score.win { color: var(--burn); }
 
   /* Standings table */
   .standings-wrap {
@@ -266,16 +276,14 @@
     text-align: left;
     border-bottom: 1px solid var(--card-border);
   }
-  .standings-table thead th:nth-child(3),
-  .standings-table thead th:nth-child(4) { text-align: center; }
+  .standings-table thead th:nth-child(n+3) { text-align: center; }
   .standings-table tbody td {
     padding: 0.5rem 0.8rem;
     font-size: 0.88rem;
     border-bottom: 1px solid rgba(0, 180, 255, 0.04);
     font-variant-numeric: tabular-nums;
   }
-  .standings-table tbody td:nth-child(3),
-  .standings-table tbody td:nth-child(4) {
+  .standings-table tbody td:nth-child(n+3) {
     text-align: center;
     font-family: var(--font-mono);
     font-size: 0.8rem;
@@ -369,7 +377,149 @@
 <div class="content-layout">
 
   <main class="report" id="week1">
-    <div class="week-label">Week 1</div>
+    <div class="week-label">Week 1 — Final</div>
+    <div class="season-label">2026 Season &middot; Franchise Mode</div>
+
+    <p class="intro">Scores are in, and the stat bots finally woke up. Quick reminder for anyone who forgot the format: Franchi$e Mode plays head-to-head <em>and</em> against the league median every week, so you can go 2-0, 1-1, or 0-2 in a single "week" depending on whether you beat your opponent, the median (155.43 this week), both, or neither. Six teams pulled off the double. Two teams got run over twice. Let's get into it.</p>
+
+    <h2>Week 1 Matchups (Final)</h2>
+
+    <div class="matchup-table-wrap">
+      <table class="matchup-table">
+        <thead>
+          <tr><th>#</th><th>Team</th><th>Score</th><th></th><th>Score</th><th>Team</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>bltzkriegbalers</td><td class="score">161.88</td><td class="vs">VS</td><td class="score win">167.32</td><td>New China Riders (jimpjimp)</td></tr>
+          <tr><td>2</td><td>Love in the Hamptons (jpwilli1)</td><td class="score">127.84</td><td class="vs">VS</td><td class="score win">182.36</td><td>Plums (damocon)</td></tr>
+          <tr><td>3</td><td>JJ's Playhouse (HomemadeSalsa)</td><td class="score win">158.46</td><td class="vs">VS</td><td class="score">116.44</td><td>BloneSack</td></tr>
+          <tr><td>4</td><td>MrWorldbeater</td><td class="score win">155.46</td><td class="vs">VS</td><td class="score">155.40</td><td>ChaseMode1</td></tr>
+          <tr><td>5</td><td>TornBrownsFan</td><td class="score">147.24</td><td class="vs">VS</td><td class="score win">160.14</td><td>Slim Pickens (liamgranty)</td></tr>
+          <tr><td>6</td><td>Shit diarrhea Sandwhich (treyday89)</td><td class="score">99.18</td><td class="vs">VS</td><td class="score win">180.38</td><td>BlueRoofBandits</td></tr>
+          <tr><td>7</td><td>Fuck The Packers Always (MitchC23)</td><td class="score">121.40</td><td class="vs">VS</td><td class="score win">135.96</td><td>itsTHEkenny</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:0.5rem;"><strong style="color:var(--burn);">League Median: 155.43</strong> &mdash; bold score = head-to-head winner</p>
+
+    <h2>Standings (after Week 1)</h2>
+
+    <div class="standings-wrap">
+      <table class="standings-table">
+        <thead>
+          <tr><th>#</th><th>Franchise</th><th>Record</th><th>PF</th><th>PA</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Plums (damocon)</td><td>2-0</td><td>182.36</td><td>127.84</td></tr>
+          <tr><td>2</td><td>BlueRoofBandits</td><td>2-0</td><td>180.38</td><td>99.18</td></tr>
+          <tr><td>3</td><td>New China Riders (jimpjimp)</td><td>2-0</td><td>167.32</td><td>161.88</td></tr>
+          <tr><td>4</td><td>Slim Pickens (liamgranty)</td><td>2-0</td><td>160.14</td><td>147.24</td></tr>
+          <tr><td>5</td><td>JJ's Playhouse (HomemadeSalsa)</td><td>2-0</td><td>158.46</td><td>116.44</td></tr>
+          <tr><td>6</td><td>MrWorldbeater</td><td>2-0</td><td>155.46</td><td>155.40</td></tr>
+          <tr><td>7</td><td>bltzkriegbalers</td><td>1-1</td><td>161.88</td><td>167.32</td></tr>
+          <tr><td>8</td><td>itsTHEkenny</td><td>1-1</td><td>135.96</td><td>121.40</td></tr>
+          <tr><td>9</td><td>ChaseMode1</td><td>0-2</td><td>155.40</td><td>155.46</td></tr>
+          <tr><td>10</td><td>TornBrownsFan</td><td>0-2</td><td>147.24</td><td>160.14</td></tr>
+          <tr><td>11</td><td>Love in the Hamptons (jpwilli1)</td><td>0-2</td><td>127.84</td><td>182.36</td></tr>
+          <tr><td>12</td><td>Fuck The Packers Always (MitchC23)</td><td>0-2</td><td>121.40</td><td>135.96</td></tr>
+          <tr><td>13</td><td>BloneSack</td><td>0-2</td><td>116.44</td><td>158.46</td></tr>
+          <tr><td>14</td><td>Shit diarrhea Sandwhich (treyday89)</td><td>0-2</td><td>99.18</td><td>180.38</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Franchise Spotlight</h2>
+
+    <div class="spotlight">
+      <div class="franchise">Plums (damocon)</div>
+      <div class="roast">Dropped 182.36 on the league, the single highest score of the week, and did it directly against the commissioner in Week 1. That's not just a win, that's a statement.</div>
+      <div class="goal">Goal for the season: keep this pace up and this stops being a "hot week" and starts being a coronation.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">BlueRoofBandits</div>
+      <div class="roast">180.38 points, a 2-0 week, and the single most one-sided beatdown on the board (81.2-point margin over treyday89). This wasn't a win, it was a mugging with a bye week's worth of style points.</div>
+      <div class="goal">Goal for the season: keep feasting on the bottom of the league while it lasts, because this schedule luck won't repeat itself in Week 9.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">New China Riders (jimpjimp)</div>
+      <div class="roast">Narrowly held off bltzkriegbalers 167.32 to 161.88 and still cleared the median for the double win. Not the flashiest score at the top of the standings, but a full 2-0 is a full 2-0. Also sitting on $120 in FAAB thanks to some kind of loyalty bonus, so this front office is playing with house money.</div>
+      <div class="goal">Goal for the season: stop winning by inches and start winning by miles before someone else's ceiling catches up.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Slim Pickens (liamgranty)</div>
+      <div class="roast">2-0 and already $20 into the FAAB budget, meaning this team is scoring AND aggressively working the wire in the same week. The name promised scraps; the scoreboard delivered a statement.</div>
+      <div class="goal">Goal for the season: keep spending, keep winning, and make the team name a bit at everyone else's expense.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">JJ's Playhouse (HomemadeSalsa)</div>
+      <div class="roast">A clean 158.46-116.44 beatdown of BloneSack to open 2-0, with $11 already spent on waivers chasing more. The playhouse roof isn't leaking after all — turns out it just needed Week 1 to actually happen.</div>
+      <div class="goal">Goal for the season: keep building on a strong start instead of coasting on one good week.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">MrWorldbeater</div>
+      <div class="roast">The single closest week anyone will ever have: won the head-to-head by 0.06 points and beat the median by 0.03. That is not a win, that is a coin flip that happened to land the right way twice.</div>
+      <div class="goal">Goal for the season: find one extra deep threat before Week 2, because that margin does not survive a rerun.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">bltzkriegbalers</div>
+      <div class="roast">Scored 161.88, the third-highest total in the entire league, and still only walked away 1-1 because jimpjimp scored juuust enough to steal the head-to-head. Cruelest possible outcome: play well, still split the week.</div>
+      <div class="goal">Goal for the season: keep scoring like a top-three team and eventually the schedule has to cooperate.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">itsTHEkenny</div>
+      <div class="roast">Beat MitchC23 head-to-head (135.96-121.40) but came up short of the 155.43 median, splitting the week 1-1 on a genuinely mid score. Efficient, unremarkable, effective.</div>
+      <div class="goal">Goal for the season: climb from "beat a bad team" mid to "beat everybody" mid.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">ChaseMode1</div>
+      <div class="roast">Lost the head-to-head by 0.06 and missed the median by 0.03. Two coin flips, two microscopic losses, zero wins to show for a 155.40 output that would've won plenty of other matchups this week. This is the unluckiest 0-2 possible.</div>
+      <div class="goal">Goal for the season: survive the bad beats early, because the points-for says this team isn't actually bad.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">TornBrownsFan</div>
+      <div class="roast">147.24 wasn't a disaster, it just ran into a hot liamgranty and a strong median. A perfectly respectable score that still nets a 0-2 week.</div>
+      <div class="goal">Goal for the season: stop the trend before "TornBrownsFan" starts describing the fantasy team as accurately as the real one.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Love in the Hamptons (jpwilli1, Commissioner)</div>
+      <div class="roast">127.84 points and a front-row seat to damocon's 182-point demolition in Round 1. The commissioner opened the season 0-2, which is either humbling or exactly the kind of self-inflicted comedy this league deserves from the guy who sets the rules.</div>
+      <div class="goal">Goal for the season: win a game before anyone starts a thread about conflict of interest.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Fuck The Packers Always (MitchC23)</div>
+      <div class="roast">121.40 points and an 0-2 week to match the energy of a team name that's all fury, no follow-through so far. The Packers remain undisturbed by this loss.</div>
+      <div class="goal">Goal for the season: direct some of that hatred toward actually beating people in this league.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">BloneSack</div>
+      <div class="roast">116.44 points, a 42-point loss to JJ's Playhouse, and a full month's worth of bad juju already banked in Week 1.</div>
+      <div class="goal">Goal for the season: find a floor, any floor, and build from there.</div>
+    </div>
+
+    <div class="spotlight">
+      <div class="franchise">Shit diarrhea Sandwhich (treyday89)</div>
+      <div class="roast">99.18 points, the worst score in the league by nearly 20 points over the next-lowest team, and an 81.2-point loss margin to open the year. The name has never been more accurate.</div>
+      <div class="goal">Goal for the season: it's early, the taxi squad is stacked for later — treat Week 1 as a rounding error and start planning for 2027 in earnest.</div>
+    </div>
+
+    <p class="footer-note">The Burn Report updates weekly. Scores are final, jokes are semi-final, MrWorldbeater's 0.06-point margin will be discussed in therapy someday.</p>
+  </main>
+
+  <section class="report" id="preseason" hidden>
+    <div class="week-label">Pre-Season</div>
     <div class="season-label">2026 Season &middot; Franchise Mode</div>
 
     <p class="intro">Buckle up, degenerates. Kickoff hasn't happened yet, so every score below reads a beautiful, meaningless 0–0. Enjoy the last moment all season where you get to pretend your team doesn't have a fatal flaw.</p>
@@ -508,12 +658,13 @@
     </div>
 
     <p class="footer-note">The Burn Report updates weekly. Scores are real, jokes are semi-real, feelings are not considered.</p>
-  </main>
+  </section>
 
   <aside class="archive-sidebar">
     <h3 class="archive-title">Archive</h3>
     <ul class="archive-list">
       <li><a href="#week1" onclick="showWeek('week1')" class="current">Week 1</a></li>
+      <li><a href="#preseason" onclick="showWeek('preseason')">Pre-Season</a></li>
     </ul>
   </aside>
 
