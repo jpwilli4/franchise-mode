@@ -44,7 +44,23 @@ Publish the latest Burn Report from the user's desktop to the Franchise Mode sit
    ```
    Note: The current/latest week's report uses `<main class="report">`, archived weeks use `<section class="report" hidden>`. The showWeek function should handle both by toggling the `hidden` attribute.
 
-9. **Commit and push** the changes with a descriptive commit message like "Publish Burn Report: Week X".
+9. **Add a High Score card** inside the new report, right after the `<p class="intro">` paragraph and before the matchups heading. Find the franchise with the highest single-game score that week and render:
+   ```html
+   <div class="high-score-card">
+     <div class="hs-label">Weekly High Score</div>
+     <div class="hs-name">Franchise Name</div>
+     <div class="hs-pts">182.36 pts</div>
+     <div class="hs-prize">$5 bonus earned</div>
+   </div>
+   ```
+
+10. **Update the Season Points leaderboard** in the `<aside class="archive-sidebar">` section (the `.season-points` div). Add the new week's points-for to each franchise's running total, re-sort by total points descending, and update the `<ol>` list. Each entry:
+    ```html
+    <li><span class="sp-name">Franchise Name</span><span class="sp-pts">364.72</span></li>
+    ```
+    The first-place entry automatically gets gold styling via CSS.
+
+11. **Commit and push** the changes with a descriptive commit message like "Publish Burn Report: Week X".
 
 ## Important Notes
 
