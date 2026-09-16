@@ -689,7 +689,7 @@
       <div class="leaderboard-table-wrap">
         <table class="leaderboard-table">
           <thead>
-            <tr><th>#</th><th>Franchise</th><th>Correct</th><th>MNF TB</th><th>Picked</th></tr>
+            <tr><th>#</th><th>Franchise</th><th>Correct</th><th id="tb-header">MNF TB</th><th>Picked</th></tr>
           </thead>
           <tbody id="leaderboard-body"></tbody>
         </table>
@@ -1106,6 +1106,34 @@
     });
   }
 
+  function usesLegacyScoring() {
+    var dominated = Object.keys(allPicks);
+    for (var i = 0; i < dominated.length; i++) {
+      var fp = allPicks[dominated[i]];
+      if (!fp) continue;
+      var games = Object.keys(fp);
+      for (var j = 0; j < games.length; j++) {
+        if (fp[games[j]].mnfTotal !== undefined) return false;
+        if (fp[games[j]].awayScore !== undefined) return true;
+      }
+    }
+    return false;
+  }
+
+  function calcLegacyDiff(fp) {
+    var totalDiff = 0;
+    viewingGames.forEach(function(g) {
+      var pick = fp[g.id];
+      var res = results[g.id];
+      if (pick && res && res.awayScore !== undefined && res.homeScore !== undefined) {
+        var predAway = pick.awayScore !== undefined ? pick.awayScore : 0;
+        var predHome = pick.homeScore !== undefined ? pick.homeScore : 0;
+        totalDiff += Math.abs(predAway - res.awayScore) + Math.abs(predHome - res.homeScore);
+      }
+    });
+    return totalDiff;
+  }
+
   function calcMnfTiebreaker(fp) {
     var mnf = getMnfGame(viewingGames);
     if (!mnf) return { mnfCorrect: 0, mnfDiff: 999999 };
@@ -1127,10 +1155,12 @@
     var board = [];
     var hasResults = Object.keys(results).length > 0;
     var allGamesScored = hasResults && viewingGames.every(function(g) { return results[g.id] && results[g.id].winner; });
+    var legacy = usesLegacyScoring();
+    document.getElementById('tb-header').textContent = legacy ? 'Diff' : 'MNF TB';
 
     FRANCHISES.forEach(function(f) {
       var fp = allPicks[f];
-      if (!fp) { board.push({ name: f, correct: 0, mnfCorrect: 0, mnfDiff: 999999, total: 0 }); return; }
+      if (!fp) { board.push({ name: f, correct: 0, mnfCorrect: 0, mnfDiff: 999999, diff: 999999, total: 0 }); return; }
       var total = 0;
       var correct = 0;
       viewingGames.forEach(function(g) {
@@ -1141,34 +1171,48 @@
           if (fp[g.id] && results[g.id] && fp[g.id].winner === results[g.id].winner) correct++;
         });
       }
-      var tb = calcMnfTiebreaker(fp);
-      board.push({ name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff, total: total });
+      if (legacy) {
+        var d = calcLegacyDiff(fp);
+        board.push({ name: f, correct: correct, diff: d, mnfCorrect: 0, mnfDiff: 999999, total: total });
+      } else {
+        var tb = calcMnfTiebreaker(fp);
+        board.push({ name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff, diff: 0, total: total });
+      }
     });
 
-    board.sort(function(a, b) {
-      if (b.correct !== a.correct) return b.correct - a.correct;
-      if (b.mnfCorrect !== a.mnfCorrect) return b.mnfCorrect - a.mnfCorrect;
-      return a.mnfDiff - b.mnfDiff;
-    });
+    if (legacy) {
+      board.sort(function(a, b) {
+        if (b.correct !== a.correct) return b.correct - a.correct;
+        return a.diff - b.diff;
+      });
+    } else {
+      board.sort(function(a, b) {
+        if (b.correct !== a.correct) return b.correct - a.correct;
+        if (b.mnfCorrect !== a.mnfCorrect) return b.mnfCorrect - a.mnfCorrect;
+        return a.mnfDiff - b.mnfDiff;
+      });
+    }
 
     var tbody = document.getElementById('leaderboard-body');
     tbody.innerHTML = '';
     board.forEach(function(entry, i) {
       var tr = document.createElement('tr');
       if (allGamesScored && i === 0 && entry.total > 0) tr.className = 'winner';
-      var mnfCol = '—';
+      var tbCol = '—';
       if (hasResults && entry.total > 0) {
-        if (entry.mnfCorrect) {
-          mnfCol = entry.mnfDiff < 999999 ? entry.mnfDiff + ' off' : 'Win';
+        if (legacy) {
+          tbCol = entry.diff + ' pts';
+        } else if (entry.mnfCorrect) {
+          tbCol = entry.mnfDiff < 999999 ? entry.mnfDiff + ' off' : 'Win';
         } else {
-          mnfCol = 'Miss';
+          tbCol = 'Miss';
         }
       }
       tr.innerHTML =
         '<td>' + (i + 1) + '</td>' +
         '<td>' + entry.name + '</td>' +
         '<td>' + (hasResults ? entry.correct + ' / ' + viewingGames.length : '—') + '</td>' +
-        '<td>' + mnfCol + '</td>' +
+        '<td>' + tbCol + '</td>' +
         '<td>' + entry.total + ' / ' + viewingGames.length + '</td>';
       tbody.appendChild(tr);
     });
@@ -1183,6 +1227,7 @@
 
     if (!allGamesScored) { area.innerHTML = ''; return; }
 
+    var legacy = usesLegacyScoring();
     var best = null;
     FRANCHISES.forEach(function(f) {
       var fp = allPicks[f];
@@ -1191,16 +1236,28 @@
       viewingGames.forEach(function(g) {
         if (fp[g.id] && results[g.id] && fp[g.id].winner === results[g.id].winner) correct++;
       });
-      var tb = calcMnfTiebreaker(fp);
-      if (!best || correct > best.correct ||
-          (correct === best.correct && tb.mnfCorrect > best.mnfCorrect) ||
-          (correct === best.correct && tb.mnfCorrect === best.mnfCorrect && tb.mnfDiff < best.mnfDiff)) {
-        best = { name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff };
+      if (legacy) {
+        var d = calcLegacyDiff(fp);
+        if (!best || correct > best.correct || (correct === best.correct && d < best.diff)) {
+          best = { name: f, correct: correct, diff: d, mnfCorrect: 0, mnfDiff: 0 };
+        }
+      } else {
+        var tb = calcMnfTiebreaker(fp);
+        if (!best || correct > best.correct ||
+            (correct === best.correct && tb.mnfCorrect > best.mnfCorrect) ||
+            (correct === best.correct && tb.mnfCorrect === best.mnfCorrect && tb.mnfDiff < best.mnfDiff)) {
+          best = { name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff, diff: 0 };
+        }
       }
     });
 
     if (best && best.correct > 0) {
-      var tbText = best.mnfCorrect ? 'MNF pick correct, ' + best.mnfDiff + ' pts off total' : 'MNF pick missed';
+      var tbText;
+      if (legacy) {
+        tbText = best.diff + ' pts total score differential';
+      } else {
+        tbText = best.mnfCorrect ? 'MNF pick correct, ' + best.mnfDiff + ' pts off total' : 'MNF pick missed';
+      }
       area.innerHTML =
         '<div class="winner-banner">' +
           '<div class="winner-label">Week ' + viewingWeek + ' Pick\'em Winner</div>' +
