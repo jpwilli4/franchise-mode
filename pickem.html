@@ -285,25 +285,6 @@
     color: var(--red);
     opacity: 0.6;
   }
-  .score-input {
-    width: 2.8rem;
-    padding: 0.4rem 0.3rem;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    background: var(--ground);
-    border: 1px solid var(--card-border);
-    border-radius: 3px;
-    -moz-appearance: textfield;
-  }
-  .score-input::-webkit-inner-spin-button,
-  .score-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .score-input:focus {
-    outline: 1px solid var(--glow);
-    border-color: var(--glow);
-  }
   .game-card .at-label {
     font-family: var(--font-mono);
     font-size: 0.68rem;
@@ -320,6 +301,61 @@
     color: var(--gold);
     min-width: 2.8rem;
     text-align: center;
+  }
+
+  /* Tiebreaker */
+  .tiebreaker-wrap {
+    margin-top: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(232, 169, 16, 0.15);
+    border-radius: 4px;
+    text-align: center;
+  }
+  .tiebreaker-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .tiebreaker-game {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+  }
+  .tiebreaker-input-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .tiebreaker-input-row label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+  .tiebreaker-input {
+    width: 4rem;
+    padding: 0.45rem 0.4rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold);
+    background: var(--ground);
+    border: 1px solid rgba(232, 169, 16, 0.2);
+    border-radius: 3px;
+    -moz-appearance: textfield;
+  }
+  .tiebreaker-input::-webkit-inner-spin-button,
+  .tiebreaker-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .tiebreaker-input:focus {
+    outline: 1px solid var(--gold);
+    border-color: var(--gold);
   }
 
   /* Submit */
@@ -585,7 +621,6 @@
     .game-card { flex-wrap: wrap; }
     .game-card .time { min-width: 100%; text-align: left; font-size: 0.62rem; margin-bottom: -0.2rem; }
     .team-side { gap: 0.3rem; }
-    .score-input { width: 2.2rem; padding: 0.35rem 0.2rem; font-size: 0.78rem; }
   }
 </style>
 
@@ -639,6 +674,8 @@
       </div>
     </div>
 
+    <div id="tiebreaker-area" hidden></div>
+
     <div id="submit-area" hidden>
       <div class="pick-status" id="pick-count"></div>
       <div class="submit-bar">
@@ -652,7 +689,7 @@
       <div class="leaderboard-table-wrap">
         <table class="leaderboard-table">
           <thead>
-            <tr><th>#</th><th>Franchise</th><th>Correct</th><th>Diff</th><th>Picked</th></tr>
+            <tr><th>#</th><th>Franchise</th><th>Correct</th><th>MNF TB</th><th>Picked</th></tr>
           </thead>
           <tbody id="leaderboard-body"></tbody>
         </table>
@@ -694,23 +731,25 @@
   var COMMISH_PASS = 'fm2026';
 
   // ── SLATE CONFIG (updated each week) ──
-  var CURRENT_WEEK = 1;
+  var CURRENT_WEEK = 2;
   var SEASON = 2026;
-  var PICKS_DEADLINE = '2026-09-13T08:00:00-07:00';
+  var PICKS_DEADLINE = '2026-09-20T08:00:00-07:00';
   var GAMES = [
-    { id: 'game1',  away: 'Buccaneers', home: 'Bengals',    day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game2',  away: 'Saints',     home: 'Lions',      day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game3',  away: 'Jets',       home: 'Titans',     day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game4',  away: 'Ravens',     home: 'Colts',      day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game5',  away: 'Falcons',    home: 'Steelers',   day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game6',  away: 'Bears',      home: 'Panthers',   day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game7',  away: 'Browns',     home: 'Jaguars',    day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game8',  away: 'Bills',      home: 'Texans',     day: 'Sunday Early',  time: 'Sun 1:00 PM' },
-    { id: 'game9',  away: 'Dolphins',   home: 'Raiders',    day: 'Sunday Late',   time: 'Sun 4:25 PM' },
-    { id: 'game10', away: 'Packers',    home: 'Vikings',    day: 'Sunday Late',   time: 'Sun 4:25 PM' },
-    { id: 'game11', away: 'Commanders', home: 'Eagles',     day: 'Sunday Late',   time: 'Sun 4:25 PM' },
-    { id: 'game12', away: 'Cardinals',  home: 'Chargers',   day: 'Sunday Late',   time: 'Sun 4:25 PM' },
-    { id: 'game13', away: 'Cowboys',    home: 'Giants',     day: 'Sunday Night',  time: 'Sun 8:20 PM' },
+    { id: 'game1',  away: 'Panthers',    home: 'Falcons',    day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game2',  away: 'Vikings',     home: 'Bears',      day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game3',  away: 'Eagles',      home: 'Titans',     day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game4',  away: 'Steelers',    home: 'Patriots',   day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game5',  away: 'Packers',     home: 'Jets',       day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game6',  away: 'Browns',      home: 'Buccaneers', day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game7',  away: 'Saints',      home: 'Ravens',     day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game8',  away: 'Bengals',     home: 'Texans',     day: 'Sunday Early',    time: 'Sun 1:00 PM' },
+    { id: 'game9',  away: 'Jaguars',     home: 'Broncos',    day: 'Sunday Late',     time: 'Sun 4:05 PM' },
+    { id: 'game10', away: 'Raiders',     home: 'Chargers',   day: 'Sunday Late',     time: 'Sun 4:05 PM' },
+    { id: 'game11', away: 'Commanders',  home: 'Cowboys',    day: 'Sunday Late',     time: 'Sun 4:25 PM' },
+    { id: 'game12', away: 'Seahawks',    home: 'Cardinals',  day: 'Sunday Late',     time: 'Sun 4:25 PM' },
+    { id: 'game13', away: 'Dolphins',    home: '49ers',      day: 'Sunday Late',     time: 'Sun 4:25 PM' },
+    { id: 'game14', away: 'Colts',       home: 'Chiefs',     day: 'Sunday Night',    time: 'Sun 8:20 PM' },
+    { id: 'game15', away: 'Giants',      home: 'Rams',       day: 'Monday Night',    time: 'Mon 8:15 PM' },
   ];
 
   var FRANCHISES = [
@@ -760,9 +799,8 @@
       btn.disabled = true;
       btn.style.cursor = 'default';
     });
-    document.querySelectorAll('.score-input').forEach(function(inp) {
-      inp.disabled = true;
-    });
+    var tbInput = document.querySelector('.tiebreaker-input');
+    if (tbInput) tbInput.disabled = true;
     document.getElementById('submit-btn').disabled = true;
   }
 
@@ -774,6 +812,7 @@
 
     renderDeadlineBar();
     renderGames();
+    renderTiebreaker();
     if (picksLocked) lockUI();
     document.getElementById('submit-area').hidden = false;
     loadResults();
@@ -852,6 +891,7 @@
     if (isCurrentWeek) {
       viewingGames = GAMES;
       renderGames();
+      renderTiebreaker();
       if (picksLocked) lockUI();
       renderCommishPanel();
       var franchise = document.getElementById('franchise-select').value;
@@ -871,6 +911,7 @@
           viewingGames = [];
         }
         renderGames();
+        renderTiebreaker();
         disableInteraction();
         loadResults();
         loadAllPicks();
@@ -883,7 +924,7 @@
       btn.disabled = true;
       btn.style.cursor = 'default';
     });
-    document.querySelectorAll('.score-input').forEach(function(inp) {
+    document.querySelectorAll('.tiebreaker-input').forEach(function(inp) {
       inp.disabled = true;
     });
   }
@@ -917,19 +958,14 @@
           '<span class="time">' + g.time + '</span>' +
           '<div class="team-side away">' +
             '<button class="team-btn" data-game="' + g.id + '" data-team="' + g.away + '">' + g.away + '</button>' +
-            '<input type="number" class="score-input" data-game="' + g.id + '" data-side="away" min="0" max="99" placeholder="—">' +
           '</div>' +
           '<span class="at-label">@</span>' +
           '<div class="team-side home">' +
-            '<input type="number" class="score-input" data-game="' + g.id + '" data-side="home" min="0" max="99" placeholder="—">' +
             '<button class="team-btn" data-game="' + g.id + '" data-team="' + g.home + '">' + g.home + '</button>' +
           '</div>';
 
         card.querySelectorAll('.team-btn').forEach(function(btn) {
           btn.addEventListener('click', function() { pickTeam(g.id, btn.dataset.team); });
-        });
-        card.querySelectorAll('.score-input').forEach(function(inp) {
-          inp.addEventListener('input', function() { updatePickCount(); });
         });
         group.appendChild(card);
       });
@@ -963,31 +999,50 @@
     updatePickCount();
   }
 
+  function getMnfGame(games) {
+    for (var i = 0; i < games.length; i++) {
+      if (games[i].day && games[i].day.toLowerCase().indexOf('monday') !== -1) return games[i];
+    }
+    return games[games.length - 1];
+  }
+
+  function renderTiebreaker() {
+    var area = document.getElementById('tiebreaker-area');
+    var mnf = getMnfGame(viewingGames);
+    if (!mnf) { area.hidden = true; return; }
+    area.hidden = false;
+    area.innerHTML =
+      '<div class="tiebreaker-wrap">' +
+        '<div class="tiebreaker-label">Monday Night Tiebreaker</div>' +
+        '<div class="tiebreaker-game">' + mnf.away + ' @ ' + mnf.home + '</div>' +
+        '<div class="tiebreaker-input-row">' +
+          '<label>Total combined score:</label>' +
+          '<input type="number" class="tiebreaker-input" id="mnf-total" min="0" max="199" placeholder="—">' +
+        '</div>' +
+      '</div>';
+    document.getElementById('mnf-total').addEventListener('input', function() { updatePickCount(); });
+  }
+
   function updatePickCount() {
     var total = GAMES.length;
-    var complete = 0;
+    var picked = 0;
     GAMES.forEach(function(g) {
-      var p = picks[g.id];
-      if (p && p.winner) {
-        var awayInp = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="away"]');
-        var homeInp = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="home"]');
-        if (awayInp && homeInp && awayInp.value !== '' && homeInp.value !== '') {
-          complete++;
-        }
-      }
+      if (picks[g.id] && picks[g.id].winner) picked++;
     });
-    document.getElementById('pick-count').textContent = complete + ' / ' + total + ' games complete (pick + scores)';
-    document.getElementById('submit-btn').disabled = complete < total || !document.getElementById('franchise-select').value;
+    var mnfInput = document.getElementById('mnf-total');
+    var hasMnf = mnfInput && mnfInput.value !== '';
+    document.getElementById('pick-count').textContent = picked + ' / ' + total + ' games picked' + (hasMnf ? ' + tiebreaker' : '');
+    document.getElementById('submit-btn').disabled = picked < total || !hasMnf || !document.getElementById('franchise-select').value;
   }
 
   function onFranchiseChange() {
     var franchise = document.getElementById('franchise-select').value;
-    if (!franchise) { picks = {}; clearScoreInputs(); updatePickDisplay(); return; }
+    if (!franchise) { picks = {}; updatePickDisplay(); restoreMnfTotal(); return; }
 
     db.ref('pickem/' + SEASON + '/week' + CURRENT_WEEK + '/picks/' + franchise).once('value', function(snap) {
       var data = snap.val();
       picks = data || {};
-      restoreScoreInputs();
+      restoreMnfTotal();
       updatePickDisplay();
       if (data) {
         document.getElementById('submit-msg').textContent = 'Picks loaded — you can update and re-submit.';
@@ -997,38 +1052,27 @@
     });
   }
 
-  function clearScoreInputs() {
-    document.querySelectorAll('.score-input').forEach(function(inp) { inp.value = ''; });
-  }
-
-  function restoreScoreInputs() {
-    clearScoreInputs();
-    GAMES.forEach(function(g) {
-      var p = picks[g.id];
-      if (p) {
-        if (p.awayScore !== undefined && p.awayScore !== null) {
-          var ai = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="away"]');
-          if (ai) ai.value = p.awayScore;
-        }
-        if (p.homeScore !== undefined && p.homeScore !== null) {
-          var hi = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="home"]');
-          if (hi) hi.value = p.homeScore;
-        }
-      }
-    });
+  function restoreMnfTotal() {
+    var inp = document.getElementById('mnf-total');
+    if (!inp) return;
+    var mnf = getMnfGame(GAMES);
+    if (mnf && picks[mnf.id] && picks[mnf.id].mnfTotal !== undefined) {
+      inp.value = picks[mnf.id].mnfTotal;
+    } else {
+      inp.value = '';
+    }
   }
 
   function submitPicks() {
     var franchise = document.getElementById('franchise-select').value;
     if (!franchise || picksLocked) return;
 
-    GAMES.forEach(function(g) {
-      if (!picks[g.id]) picks[g.id] = {};
-      var ai = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="away"]');
-      var hi = document.querySelector('.score-input[data-game="' + g.id + '"][data-side="home"]');
-      if (ai && ai.value !== '') picks[g.id].awayScore = parseInt(ai.value, 10);
-      if (hi && hi.value !== '') picks[g.id].homeScore = parseInt(hi.value, 10);
-    });
+    var mnf = getMnfGame(GAMES);
+    var mnfInput = document.getElementById('mnf-total');
+    if (mnf && mnfInput && mnfInput.value !== '') {
+      if (!picks[mnf.id]) picks[mnf.id] = {};
+      picks[mnf.id].mnfTotal = parseInt(mnfInput.value, 10);
+    }
 
     db.ref('pickem/' + SEASON + '/week' + CURRENT_WEEK + '/picks/' + franchise).set(picks, function(err) {
       if (err) {
@@ -1062,20 +1106,21 @@
     });
   }
 
-  function calcDiff(fp) {
-    var totalDiff = 0;
-    var counted = 0;
-    viewingGames.forEach(function(g) {
-      var pick = fp[g.id];
-      var res = results[g.id];
-      if (pick && res && res.awayScore !== undefined && res.homeScore !== undefined) {
-        var predAway = pick.awayScore !== undefined ? pick.awayScore : 0;
-        var predHome = pick.homeScore !== undefined ? pick.homeScore : 0;
-        totalDiff += Math.abs(predAway - res.awayScore) + Math.abs(predHome - res.homeScore);
-        counted++;
+  function calcMnfTiebreaker(fp) {
+    var mnf = getMnfGame(viewingGames);
+    if (!mnf) return { mnfCorrect: 0, mnfDiff: 999999 };
+    var mnfPick = fp[mnf.id];
+    var mnfResult = results[mnf.id];
+    var mnfCorrect = 0;
+    var mnfDiff = 999999;
+    if (mnfPick && mnfResult && mnfResult.winner) {
+      if (mnfPick.winner === mnfResult.winner) mnfCorrect = 1;
+      if (mnfPick.mnfTotal !== undefined && mnfResult.awayScore !== undefined && mnfResult.homeScore !== undefined) {
+        var actualTotal = mnfResult.awayScore + mnfResult.homeScore;
+        mnfDiff = Math.abs(mnfPick.mnfTotal - actualTotal);
       }
-    });
-    return { diff: totalDiff, counted: counted };
+    }
+    return { mnfCorrect: mnfCorrect, mnfDiff: mnfDiff };
   }
 
   function updateLeaderboard() {
@@ -1085,7 +1130,7 @@
 
     FRANCHISES.forEach(function(f) {
       var fp = allPicks[f];
-      if (!fp) { board.push({ name: f, correct: 0, diff: 999999, total: 0 }); return; }
+      if (!fp) { board.push({ name: f, correct: 0, mnfCorrect: 0, mnfDiff: 999999, total: 0 }); return; }
       var total = 0;
       var correct = 0;
       viewingGames.forEach(function(g) {
@@ -1096,13 +1141,14 @@
           if (fp[g.id] && results[g.id] && fp[g.id].winner === results[g.id].winner) correct++;
         });
       }
-      var d = calcDiff(fp);
-      board.push({ name: f, correct: correct, diff: d.diff, total: total });
+      var tb = calcMnfTiebreaker(fp);
+      board.push({ name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff, total: total });
     });
 
     board.sort(function(a, b) {
       if (b.correct !== a.correct) return b.correct - a.correct;
-      return a.diff - b.diff;
+      if (b.mnfCorrect !== a.mnfCorrect) return b.mnfCorrect - a.mnfCorrect;
+      return a.mnfDiff - b.mnfDiff;
     });
 
     var tbody = document.getElementById('leaderboard-body');
@@ -1110,11 +1156,19 @@
     board.forEach(function(entry, i) {
       var tr = document.createElement('tr');
       if (allGamesScored && i === 0 && entry.total > 0) tr.className = 'winner';
+      var mnfCol = '—';
+      if (hasResults && entry.total > 0) {
+        if (entry.mnfCorrect) {
+          mnfCol = entry.mnfDiff < 999999 ? entry.mnfDiff + ' off' : 'Win';
+        } else {
+          mnfCol = 'Miss';
+        }
+      }
       tr.innerHTML =
         '<td>' + (i + 1) + '</td>' +
         '<td>' + entry.name + '</td>' +
         '<td>' + (hasResults ? entry.correct + ' / ' + viewingGames.length : '—') + '</td>' +
-        '<td>' + (hasResults && entry.total > 0 ? entry.diff + ' pts' : '—') + '</td>' +
+        '<td>' + mnfCol + '</td>' +
         '<td>' + entry.total + ' / ' + viewingGames.length + '</td>';
       tbody.appendChild(tr);
     });
@@ -1137,18 +1191,21 @@
       viewingGames.forEach(function(g) {
         if (fp[g.id] && results[g.id] && fp[g.id].winner === results[g.id].winner) correct++;
       });
-      var d = calcDiff(fp);
-      if (!best || correct > best.correct || (correct === best.correct && d.diff < best.diff)) {
-        best = { name: f, correct: correct, diff: d.diff };
+      var tb = calcMnfTiebreaker(fp);
+      if (!best || correct > best.correct ||
+          (correct === best.correct && tb.mnfCorrect > best.mnfCorrect) ||
+          (correct === best.correct && tb.mnfCorrect === best.mnfCorrect && tb.mnfDiff < best.mnfDiff)) {
+        best = { name: f, correct: correct, mnfCorrect: tb.mnfCorrect, mnfDiff: tb.mnfDiff };
       }
     });
 
     if (best && best.correct > 0) {
+      var tbText = best.mnfCorrect ? 'MNF pick correct, ' + best.mnfDiff + ' pts off total' : 'MNF pick missed';
       area.innerHTML =
         '<div class="winner-banner">' +
           '<div class="winner-label">Week ' + viewingWeek + ' Pick\'em Winner</div>' +
           '<div class="winner-name">' + best.name + '</div>' +
-          '<div class="winner-stat">' + best.correct + ' / ' + viewingGames.length + ' correct — ' + best.diff + ' pts total score differential</div>' +
+          '<div class="winner-stat">' + best.correct + ' / ' + viewingGames.length + ' correct — ' + tbText + '</div>' +
         '</div>';
     }
   }

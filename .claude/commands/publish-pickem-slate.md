@@ -88,3 +88,5 @@ If the format varies, parse it flexibly — the key data is: week number, team n
 - Team names in the GAMES array must use ESPN's `shortDisplayName` format (e.g., "Bears" not "Chicago Bears", "49ers" not "San Francisco 49ers") for the auto-scorer to match correctly.
 - Always write the Firebase active slate data so the cron job knows what to score.
 - The Pick'em page resets for each new slate — franchises submit fresh picks per week.
+- The Monday Night game is the tiebreaker game. Use `day: 'Monday Night'` for MNF games so `getMnfGame()` detects them. If a week has no Monday game, the last game in the array is the fallback tiebreaker.
+- Tiebreaker format (Week 2+): franchises pick all winners + enter a predicted MNF combined total score. Ties break by: most correct picks → MNF pick correct → closest MNF total score.
