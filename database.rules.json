@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "pickem": {
+      ".read": true,
+      "$season": {
+        "$week": {
+          "picks": {
+            "$franchise": {
+              ".write": true
+            }
+          },
+          "games": {
+            ".write": "auth != null"
+          },
+          "results": {
+            ".write": "auth != null"
+          }
+        }
+      },
+      "active": {
+        ".write": "auth != null"
+      }
+    }
+  }
+}
