@@ -254,6 +254,60 @@
     line-height: 1.4;
   }
 
+  /* Starts tracker */
+  .starts-tracker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
+  }
+  .starts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .starts-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-body);
+    font-variant-numeric: tabular-nums;
+  }
+  .starts-label strong {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+  .on-pace {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+  }
+  .starts-bar-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .starts-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--glow);
+    transition: width 0.4s ease;
+  }
+  .starts-note {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
   /* Tagged (active) card — subtle left accent */
   .tag-card.tagged {
     border-left: 3px solid var(--bronze);
@@ -305,6 +359,10 @@
     <div class="stat-label">Tagging Deadline</div>
     <div class="stat-value">Closed</div>
   </div>
+  <div class="stat-item">
+    <div class="stat-label">Start Tracker</div>
+    <div class="stat-value">Through Wk 6</div>
+  </div>
 </div>
 
 <section class="section-wrap">
@@ -320,6 +378,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>3</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:42.8%"></div></div>
+        <span class="starts-note">3/3 eligible · Wk 3–5 out (hamstring)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -330,6 +396,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>6</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:85.7%"></div></div>
+        <span class="starts-note">6/6 · No missed weeks</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -340,6 +414,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>4</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:57.1%"></div></div>
+        <span class="starts-note">4/4 eligible · Wk 4, 6 out (ankle)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -350,6 +432,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>6</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:85.7%"></div></div>
+        <span class="starts-note">6/6 · No missed weeks</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -360,6 +450,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>4</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:57.1%"></div></div>
+        <span class="starts-note">4/4 eligible · Wk 1–2 out (knee surgery)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -370,6 +468,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>6</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:85.7%"></div></div>
+        <span class="starts-note">6/6 · No missed weeks</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -380,6 +486,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>4</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:57.1%"></div></div>
+        <span class="starts-note">4/4 eligible · Wk 3–4 out (injury)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -390,6 +504,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>6</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:85.7%"></div></div>
+        <span class="starts-note">6/6 · No missed weeks</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -400,6 +522,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>5</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:71.4%"></div></div>
+        <span class="starts-note">5/5 eligible · Wk 6 out (ankle)</span>
+      </div>
     </div>
 
     <div class="tag-card muted">
@@ -415,6 +545,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>4</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:57.1%"></div></div>
+        <span class="starts-note">4/4 eligible · Wk 2–3 out (injury)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -425,6 +563,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>6</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:85.7%"></div></div>
+        <span class="starts-note">6/6 · No missed weeks</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -435,6 +581,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>5</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:71.4%"></div></div>
+        <span class="starts-note">5/5 eligible · Wk 6 out (injury)</span>
+      </div>
     </div>
 
     <div class="tag-card tagged">
@@ -445,6 +599,14 @@
       </div>
       <span class="tier-chip bronze">Bronze</span>
       <span class="streak-line">Year 1 — Tagged since 2026</span>
+      <div class="starts-tracker">
+        <div class="starts-header">
+          <span class="starts-label"><strong>5</strong> / 7 starts</span>
+          <span class="on-pace">On Pace</span>
+        </div>
+        <div class="starts-bar-track"><div class="starts-bar-fill" style="width:71.4%"></div></div>
+        <span class="starts-note">5/5 eligible · Wk 6 bye week</span>
+      </div>
     </div>
 
   </div>
